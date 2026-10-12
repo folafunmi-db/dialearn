@@ -252,3 +252,12 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 .hero-stage .anatomy-art{isolation:isolate}
 
 .viewer-stage[data-hovered='true'] .anatomy-art,.viewer-stage[data-hovered='true'] .anatomy-canvas{cursor:pointer}.viewer-stage[data-dragging='true'] .anatomy-art,.viewer-stage[data-dragging='true'] .anatomy-canvas{cursor:grabbing}.viewer-description strong{color:var(--green)}
+
+/* Reserve a separate column for the selection mark and inset the option list. */
+.ui-select-content{padding:6px}.ui-select-content [data-slot='select-item']{display:grid;grid-template-columns:minmax(0,1fr) 20px;gap:10px;padding:10px 12px;padding-inline-end:12px;min-height:44px}.ui-select-content [data-slot='select-item-text']{min-width:0;white-space:normal;overflow-wrap:anywhere}.ui-select-content .select-item-indicator{position:static;grid-column:2;justify-self:end;width:18px;height:18px;color:var(--green)}.ui-select-content .select-item-indicator svg{width:18px;height:18px}
+.viewer-zoom-controls{position:absolute;bottom:12px;inset-inline-end:12px;z-index:4;display:flex;align-items:center;gap:2px;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);box-shadow:0 3px 12px #18251b14}.viewer-zoom-controls button{min-width:44px;min-height:44px;font-size:23px;line-height:1;padding:0;border-radius:6px}.viewer-zoom-controls button:hover:not(:disabled){background:var(--wash);color:var(--green)}.viewer-zoom-controls output{font-size:11px;font-variant-numeric:tabular-nums;min-width:42px;text-align:center}.viewer-stage{overscroll-behavior:contain}
+:root[data-theme='dark']{--line:#7f927b;--muted-ink:#c1cdbd;--green:#b8d7a1}.desktop-theme-toggle{display:inline-flex}.mobile-theme-toggle{flex-shrink:0;width:44px;height:44px;border:1px solid var(--line);border-radius:8px;color:var(--green)}
+@media(max-width:980px) and (min-width:721px){.header{gap:14px}.header nav{gap:14px}.header-tools{gap:6px}.header .brand{font-size:25px}}
+@media(max-width:720px){.desktop-theme-toggle{display:none}.viewer-zoom-controls{bottom:8px;inset-inline-end:8px}.mobile-section-nav .mobile-theme-toggle{display:inline-flex;align-items:center;justify-content:center}}
+/* Give long device names room without overflowing a phone viewport. */
+.ui-select-content{min-width:min(260px,calc(100vw - 24px));max-width:calc(100vw - 24px)}

@@ -56,7 +56,7 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Browser verified drone motor hover (computed cursor pointer), click selection, and a 57° drag that preserved the selected motor. At 390px, clicking a propeller changed both selector and description to Propellers without horizontal overflow. Viewport restored.
 - TypeScript and production build passed.
 
-### Corrected 3D drag directions
+### Earlier 3D drag direction change (superseded below)
 - Reversed horizontal and vertical pointer deltas in the shared rotation hook. Easing, sensitivity, drag threshold and click suppression are retained.
 - Browser verified a 100px rightward drag produces approximately −55° yaw, and a 60px downward drag produces approximately +33° tilt. The selected frame remained selected through both gestures.
 - Static production build, including TypeScript checks, passed.
@@ -65,3 +65,15 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Selected solids now use a strong green tint, a restrained emissive accent and a fully opaque green edge outline. Other parts retain their normal materials.
 - Selecting a parent assembly includes its component solids; selecting an individual component highlights that component.
 - Browser screenshots verified all four propellers turn green when selected. Selecting the motors then turns all four motors green and restores the propellers to their normal color. TypeScript/production build passed.
+
+### Zoom, select spacing and theme controls (12 October 2026)
+- Local production build passed with TypeScript validation. In the Three.js modal, zoom in changed 100% to 120%, zoom out restored 100%, and wheel input changed 120% to 149%. Rightward drag increased the displayed yaw to 43°.
+- Verified the zoom controls at 390 × 844 and desktop sizes. Two-pointer pinch handling is implemented but has not been tested on a physical touchscreen.
+- Base UI options reserve a separate checkmark column; selected text and indicator had a 12px gap. Menus have 6px edge padding and a 260px minimum width capped to the viewport.
+- Theme toggles work on mobile and desktop; dark preference survived reload and the browser reported no warnings or errors during this check. Green accents are retained. This is not a comprehensive accessibility audit.
+- The initial publish was blocked by an automatic approval review usage-limit failure. A later production publish is recorded below.
+- Dark palette contrast calculation: main text 9.89–13.77:1, secondary text 6.85–9.54:1, green accents 7.14–9.94:1 across paper/surface/wash. Strengthened dark borders to #7f927b, producing 3.39–4.72:1 against those surfaces. These palette checks do not certify every component/state.
+
+### Production publish and rightward drag verification
+- Published the accumulated fixes to https://dialearn-two.vercel.app (deployment dpl_EA8kTtLDfzuqS3PdC6aXzrq4cfyS). The approval review succeeded on this attempt.
+- On the deployed drone viewer, a 100px rightward drag changed rotation from 0° to 54°. The new zoom controls and theme toggle were present. Screenshot: shots/live-right-drag.png.
