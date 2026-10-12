@@ -81,3 +81,7 @@ Source is uploaded only to the requested private GitHub repository and the user�
 ### Pointer focus without a box
 - Scoped the pointer-focus reset to anatomy parts and the 3D surface; keyboard focus keeps a 3px green outline. Device detail outlines now use :focus-visible.
 - Local build passed. Clicking the phone battery kept focus and aria-pressed=true with focus-visible=false and outline:none. Tab moved to the chip with focus-visible=true and a 3px green outline; Enter selected it. Screenshot: shots/part-click-no-box.png.
+
+### Neutral charcoal dark theme
+- Replaced green-tinted dark paper, cards, washes, artwork backplates and modal backdrop with neutral charcoal/graphite shades. Green remains on interactive accents and the anatomy models.
+- Palette contrast against the three main dark surfaces: primary text 12.00–15.69:1, secondary text 7.77–10.16:1, green accents 8.50–11.12:1, borders 3.98–5.21:1. These are palette checks, not a full accessibility certification.

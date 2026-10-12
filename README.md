@@ -80,4 +80,4 @@ The brand mark uses offset book spines and an open book with a discovery spark. 
 
 Object switching lives in the exploration heading as a compact “Change object” control, alongside the explanation-depth buttons. It lists all available objects and keeps the selected option indicated in the menu.
 
-Light and dark modes are available from the header (or mobile navigation) and Learning settings. The saved theme loads before rendering; new visits use the system theme. Green highlights remain visible in both modes.
+Light and dark modes are available from the header (or mobile navigation) and Learning settings. The saved theme loads before rendering; new visits use the system theme. Dark mode uses neutral charcoal surfaces with green highlights; green highlights remain visible in both modes.
