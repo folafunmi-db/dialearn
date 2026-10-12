@@ -242,3 +242,11 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 @media(max-width:920px){.diy-featured{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:720px){.diy-featured{grid-template-columns:1fr}.diy-build-art{height:235px}.diy-lab-link{margin-top:16px}}
 /* Hole markers stay dark against the breadboard's pale plastic in both themes. */
 .device-stage [data-assembly='breadboard'] .iso-dots[data-tone='hi'] circle{fill:#405842}
+
+/* Hero captions occupy a separate row below the illustration. */
+.phone-stage.hero-stage .stage-bottom{position:static;inset:auto;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 12px 0;margin-top:10px;font-size:11px}.phone-stage.hero-stage .stage-bottom>span{max-width:none;flex:1;line-height:1.6}.hero-stage .stage-toggle{min-height:44px;flex-shrink:0}.phone-stage.hero-stage .explore-3d-button{margin-top:12px}.hero-stage .anatomy-art{padding-bottom:0}
+.hero-idea-trigger{display:inline;padding:0;min-height:44px;font:inherit;letter-spacing:inherit;line-height:inherit;color:inherit;text-align:inherit}.hero-pocket-note{position:absolute;inset-inline-start:2px;top:calc(100% + 20px);font-family:Georgia,serif;font-size:17px;font-weight:400;letter-spacing:0;line-height:1.4;white-space:nowrap;color:var(--muted-ink);opacity:0;transform:translateY(-5px);transition:opacity 240ms var(--soft-ease),transform 300ms var(--soft-ease);pointer-events:none}.hero-idea[data-open=true] .hero-pocket-note{opacity:1;transform:translateY(0)}.hero .hero-description{margin-top:58px}
+@media(max-width:720px){.phone-stage.hero-stage .stage-bottom{padding:14px 4px 0;gap:12px}.phone-stage.hero-stage .stage-bottom>span{font-size:12px;max-width:180px}.hero-pocket-note{font-size:16px}.hero .hero-description{margin-top:55px}}
+.still-mode .hero-pocket-note{transition:none}@media(prefers-reduced-motion:reduce){.hero-pocket-note{transition:none;transform:none}}
+
+.hero-stage .anatomy-art{isolation:isolate}

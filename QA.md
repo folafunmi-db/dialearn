@@ -44,3 +44,8 @@ Source is uploaded only to the requested private GitHub repository and the userâ
 - Fixture line helper returned zero ends but zero tested lines, so this is not an independent line-coverage certification. Full 3D orbit/performance audit and comprehensive 4Ã— junction sweep were not run.
 - Reaction sketch compiled with a temporary C++ Arduino-API simulation; elapsed-time, early-press, release and timeout checks passed. Physical electronics have not been tested.
 - TypeScript/static production build passed. Offline manifest: 105 URLs, 10.90 MB before compression. Full expanded network-off session not rerun.
+
+### Hero captions and pocket reveal
+- Diagram hint and assembly toggle now occupy a normal-flow row below the hero illustration. The decorative orbit is confined to the illustration.
+- Removed the annotation from the phone. Ideas inside reveals a localized pocket note on mouse entry, keyboard focus or tap; blur dismisses it. Soft opacity/position transitions respect reduced-motion preferences.
+- Browser verified mouse entry, Tab/Shift+Tab reveal and dismissal, and mobile tap at 390px. Hint top is below artwork bottom; note bottom is above description top. No mobile horizontal overflow. Viewport restored. TypeScript and production build passed.
