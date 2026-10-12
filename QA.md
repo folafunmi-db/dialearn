@@ -102,3 +102,8 @@ Source is uploaded only to the requested private GitHub repository and the userâ
 ### Hero copy entrance
 - Hero eyebrow, heading, description, actions and notes fade upward by 12px over 620ms, staggered at 40/100/170/230/290ms. Transform animation leaves layout dimensions unchanged.
 - Browser inspected the sequence during entrance and confirmed the delays and progressive opacity. Reduce motion disabled the animation with opacity remaining 1; restored the original preference after checking. Keyboard focus skips the entrance for the focused group. Production build passed.
+
+### Full-width page bands with capped contents
+- Main page, header/footer bands, principles divider, DIY divider and curiosity background span the viewport. Inner content is centered at up to 1190px plus responsive gutters. Reader pages retain their separate reading width.
+- Browser at 1920px measured full-width bands at 1920px and hero/header containers at 1266px with 38px gutters (1190px contents). No horizontal overflow at 1920px or 1069px. Home, drone and DIY pages each fit 390px without overflow; object header remains sticky.
+- Typecheck and production build passed. Screenshot: shots/full-width-desktop.png.

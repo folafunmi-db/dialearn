@@ -290,3 +290,33 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
  html:not(.still-mode) .hero-copy>.hero-notes{animation-delay:290ms}
  html:not(.still-mode) .hero-copy>:focus-within{animation:none}
 }
+/* Page bands fill the viewport; their contents share one readable width. */
+:root{--content-width:1190px;--page-gutter:38px}
+.site-main{width:100%;max-width:none;margin:0;padding:0}
+.site-content,.site-header-band .header,.site-footer-band footer,.diy-band>.diy-section,.diy-page-band>.diy-section{width:100%;max-width:calc(var(--content-width) + var(--page-gutter)*2);margin-inline:auto;padding-inline:var(--page-gutter)}
+.site-header-band{width:100%;border-bottom:1px solid var(--line);background:var(--paper)}
+.site-header-band .header{border-bottom:0;background:transparent}
+.site-header-band.is-dedicated{position:sticky;top:0;z-index:30}
+.site-header-band .dedicated-header{position:static}
+.site-footer-band{width:100%;border-top:1px solid var(--line)}
+.site-footer-band footer{border-top:0}
+.principles{display:block;padding:0}
+.principles-inner{display:flex;align-items:center;justify-content:center;gap:88px;padding-block:21px}
+.diy-band{border-top:1px solid var(--line)}
+.diy-band>.diy-section,.diy-page-band>.diy-section{border-top:0}
+.curiosity-band{background:var(--wash);margin-bottom:32px}
+.curiosity.site-content{border-radius:0;margin-block:0;background:transparent}
+.site-main.dedicated-main{padding:24px var(--page-gutter) 45px}
+.site-main .dedicated-workshop{max-width:var(--content-width);margin-inline:auto}
+.site-main .diy-page-band{margin-inline:calc(-1 * var(--page-gutter))}
+.diy-page-band>.diy-section{padding-top:25px}
+@media(max-width:980px){:root{--page-gutter:25px}.principles-inner{gap:25px}}
+@media(max-width:720px){
+ :root{--page-gutter:22px}
+ .site-header-band .header{padding-inline:16px}
+ .principles-inner{flex-direction:column;align-items:flex-start;gap:14px;padding-block:18px}
+ .curiosity-band{margin-bottom:25px}
+ .site-main.dedicated-main{padding:0 0 30px}
+ .site-main .diy-page-band{margin-inline:0}
+ .diy-page-band>.diy-section{margin-inline:auto;padding-top:28px}
+}
