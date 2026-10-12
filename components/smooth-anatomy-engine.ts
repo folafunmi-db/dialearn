@@ -12,8 +12,8 @@ export function createSmoothEngine(host:HTMLElement,model:AnatomyModel,onAngle:(
  const scene=new THREE.Scene(),root=new THREE.Group();root.scale.x=-1;scene.add(root); // Match the Anatomy projection's handedness.
  const camera=new THREE.OrthographicCamera(-200,200,200,-200,.1,3000);camera.up.set(0,0,1);scene.add(camera);
  const keyLight=new THREE.DirectionalLight(0xffffff,3.2);keyLight.position.set(-180,220,350);camera.add(keyLight);
- const fillLight=new THREE.DirectionalLight(0xe9efff,1.1);fillLight.position.set(220,-80,120);camera.add(fillLight);
- scene.add(new THREE.HemisphereLight(0xffffff,0x647080,1.6));
+ const fillLight=new THREE.DirectionalLight(0xf3f5ee,1.1);fillLight.position.set(220,-80,120);camera.add(fillLight);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x657061,1.6));
  const objects:{group:THREE.Group;object:THREE.Object3D;move:Vec;data:Solid|Ink;material?:THREE.MeshStandardMaterial;base:number}[]=[],pickables:THREE.Object3D[]=[],resources:{dispose:()=>void}[]=[];
  const vector=(a:Vec)=>new THREE.Vector3(...a);
  const metadata=(s:Solid|Ink)=>({part:s.part,component:s.component,stage:s.stage});
@@ -22,16 +22,16 @@ export function createSmoothEngine(host:HTMLElement,model:AnatomyModel,onAngle:(
  const darkParts=new Set(['battery','cell','pack','power','storage','controls','buttons','sticks']);
  const metalParts=new Set(['motors','drive','rotor','wheels','drivetrain','brakes','steering']);
  const baseColour=(s:Solid)=>{
-  if(s.className==='screen-glass')return 0x243449;
-  if(s.className==='screen-widget')return 0x91b8cf;
+  if(s.className==='screen-glass')return 0x273a30;
+  if(s.className==='screen-widget')return 0xb4c5a4;
   if(s.component==='busbars'||s.component==='contacts')return 0xb78d59;
-  if(boardParts.has(s.part))return s.tone==='hi'?0x303944:0x456d7b;
-  if(darkParts.has(s.part))return s.tone==='lo'?0x30353c:0x58616a;
-  if(metalParts.has(s.part))return s.tone==='lo'?0x343b43:0xaeb8c3;
-  if(s.part==='sensor'||s.part==='led')return s.tone==='hi'?0xd6c3a0:0x6c8290;
-  return s.tone==='lo'?0x68727e:s.tone==='mid'?0xb7bfc7:0xe0e1de;
+  if(boardParts.has(s.part))return s.tone==='hi'?0x303b32:0x4d6956;
+  if(darkParts.has(s.part))return s.tone==='lo'?0x303831:0x59655a;
+  if(metalParts.has(s.part))return s.tone==='lo'?0x343e36:0xb6bdb0;
+  if(s.part==='sensor'||s.part==='led')return s.tone==='hi'?0xd6c3a0:0x78876e;
+  return s.tone==='lo'?0x6b7768:s.tone==='mid'?0xc0c7b9:0xe1e3da;
  };
- const selectedColour=new THREE.Color(0x9ac7e0),workingColour=new THREE.Color();
+ const selectedColour=new THREE.Color(0xb6cba0),workingColour=new THREE.Color();
  function place(object:THREE.Object3D,s:Solid|Ink,base=0,material?:THREE.MeshStandardMaterial){const group=new THREE.Group();group.add(object);root.add(group);object.userData=metadata(s);objects.push({group,object,move:s.move||[0,0,0],data:s,material,base});return group;}
  for(const s of model.parts){
   let geometry:THREE.BufferGeometry;
@@ -43,12 +43,12 @@ export function createSmoothEngine(host:HTMLElement,model:AnatomyModel,onAngle:(
    const matrix=new THREE.Matrix4().makeBasis(vector(s.F.u),vector(s.F.a),vector(s.F.v));matrix.setPosition(vector(s.F.o));geometry.applyMatrix4(matrix);
   }
   resources.push(geometry);const base=baseColour(s),material=new THREE.MeshStandardMaterial({color:base,roughness:metalParts.has(s.part)?.48:.76,metalness:metalParts.has(s.part)?.35:.08,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});resources.push(material);const mesh=new THREE.Mesh(geometry,material),group=place(mesh,s,base,material);pickables.push(mesh);
-  const edges=new THREE.EdgesGeometry(geometry,26),ink=new THREE.LineBasicMaterial({color:0x26313d,transparent:true,opacity:.65,depthWrite:false});resources.push(edges,ink);const outline=new THREE.LineSegments(edges,ink);outline.renderOrder=2;group.add(outline);
+  const edges=new THREE.EdgesGeometry(geometry,26),ink=new THREE.LineBasicMaterial({color:0x303b2d,transparent:true,opacity:.65,depthWrite:false});resources.push(edges,ink);const outline=new THREE.LineSegments(edges,ink);outline.renderOrder=2;group.add(outline);
  }
  for(const ink of model.inks){
-  if(ink.kind==='circle'&&ink.F){const f=ink.F,points=Array.from({length:64},(_,i)=>vector(f.o).addScaledVector(vector(f.a),ink.s||0).addScaledVector(vector(f.u),Math.cos(i*Math.PI/32)*(ink.r||0)).addScaledVector(vector(f.v),Math.sin(i*Math.PI/32)*(ink.r||0)));const geometry=new THREE.BufferGeometry().setFromPoints(points),material=new THREE.LineBasicMaterial({color:0x293744,transparent:true,opacity:.7,depthWrite:false});resources.push(geometry,material);const line=new THREE.LineLoop(geometry,material);line.renderOrder=3;place(line,ink);pickables.push(line);}
-  if(ink.kind==='dot'&&ink.point){const geometry=new THREE.SphereGeometry(.5,6,4),material=new THREE.MeshBasicMaterial({color:0x293744});resources.push(geometry,material);const mesh=new THREE.Mesh(geometry,material);mesh.position.copy(vector(ink.point));place(mesh,ink);}
-  if(ink.kind==='text'&&ink.point){const surface=document.createElement('canvas');surface.width=512;surface.height=128;const ctx=surface.getContext('2d')!;ctx.font='72px sans-serif';ctx.fillStyle=boardParts.has(ink.part)||darkParts.has(ink.part)||ink.part==='display'?'#edf2f7':'#203043';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ink.text||'',256,64);const texture=new THREE.CanvasTexture(surface);texture.flipY=false;texture.colorSpace=THREE.SRGBColorSpace;const height=(ink.size||7)*1.5,geometry=new THREE.PlaneGeometry(height*4,height),material=new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide});resources.push(texture,geometry,material);const mesh=new THREE.Mesh(geometry,material);mesh.position.copy(vector(ink.point));mesh.scale.x=-1;mesh.renderOrder=3;place(mesh,ink);}
+  if(ink.kind==='circle'&&ink.F){const f=ink.F,points=Array.from({length:64},(_,i)=>vector(f.o).addScaledVector(vector(f.a),ink.s||0).addScaledVector(vector(f.u),Math.cos(i*Math.PI/32)*(ink.r||0)).addScaledVector(vector(f.v),Math.sin(i*Math.PI/32)*(ink.r||0)));const geometry=new THREE.BufferGeometry().setFromPoints(points),material=new THREE.LineBasicMaterial({color:0x354331,transparent:true,opacity:.7,depthWrite:false});resources.push(geometry,material);const line=new THREE.LineLoop(geometry,material);line.renderOrder=3;place(line,ink);pickables.push(line);}
+  if(ink.kind==='dot'&&ink.point){const geometry=new THREE.SphereGeometry(.5,6,4),material=new THREE.MeshBasicMaterial({color:0x354331});resources.push(geometry,material);const mesh=new THREE.Mesh(geometry,material);mesh.position.copy(vector(ink.point));place(mesh,ink);}
+  if(ink.kind==='text'&&ink.point){const surface=document.createElement('canvas');surface.width=512;surface.height=128;const ctx=surface.getContext('2d')!;ctx.font='72px sans-serif';ctx.fillStyle=boardParts.has(ink.part)||darkParts.has(ink.part)||ink.part==='display'?'#f1f5e9':'#30412b';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ink.text||'',256,64);const texture=new THREE.CanvasTexture(surface);texture.flipY=false;texture.colorSpace=THREE.SRGBColorSpace;const height=(ink.size||7)*1.5,geometry=new THREE.PlaneGeometry(height*4,height),material=new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide});resources.push(texture,geometry,material);const mesh=new THREE.Mesh(geometry,material);mesh.position.copy(vector(ink.point));mesh.renderOrder=3;place(mesh,ink);}
  }
  let angle=0,target=0,tilt=0,targetTilt=0,roll=0,targetRoll=0,zoom=1,opened=1,wantOpen=1,stage='foundations',selected='',still=false,frame=0,last=0,inView=true,disposed=false,viewHeight=400;
  let lastHit:THREE.Object3D|null=null;const centre=new THREE.Vector3(),raycaster=new THREE.Raycaster();raycaster.params.Line={threshold:.8};

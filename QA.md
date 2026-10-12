@@ -18,3 +18,11 @@ Before this expansion, Arabic at 390 px had no horizontal overflow and the landi
 ## Delivery
 
 Source is uploaded only to the requested private GitHub repository and the user’s Vercel project. Build outputs, screenshots, local environment files, credentials, `.openai/` state and dependency caches are excluded from Git and Vercel source upload. No external source citations are available offline.
+
+## DIY, branding and palette update
+
+- Build and TypeScript passed with a separate DIY lab: seven device cards, two on-site DIY builds and four credited external project ideas. The four original guide pages and their publisher/author credits were checked online; selection evidence is in `lib/diy-resources.ts`. They are not a global popularity ranking.
+- Browser DOM confirms that the extra “Explore at your pace” card text is absent and that ICO, SVG and Apple touch icons are linked. The new open-book/stack mark was inspected at 180 px and in the header.
+- Desktop DIY cards and guide links were visually checked; the page has no horizontal overflow at 390 px.
+- The 3D palette now uses sage, forest and graphite tones, keeping the corrected layout-based canvas sizing and 2× rendering.
+- Updated offline manifest: 86 files, 8.96 MB uncompressed. External DIY guides are links and still need internet.
