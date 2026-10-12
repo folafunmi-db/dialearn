@@ -220,3 +220,5 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 @media(max-width:720px){.phone-stage .stage-bottom,.phone-stage.hero-stage .stage-bottom{position:static;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 4px 0}.phone-stage .explore-3d-button{margin-top:12px}.viewer-stage.phone-stage{padding:0}.viewer-stage .anatomy-art{height:100%}}
 
 .object-picker{display:flex;align-items:center;gap:18px;padding:0 30px 20px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted-ink)}.object-picker .ui-select-trigger{width:min(360px,100%);min-width:0;min-height:44px;color:var(--ink)}.object-picker .ui-select-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.card-open{display:block;text-decoration:none;color:inherit}@media(max-width:720px){.object-picker{display:block;padding:0 16px 16px}.object-picker .ui-select-trigger{margin-top:7px;width:100%}}
+
+.viewer-stage{background:#f2f3f5}.viewer-stage .anatomy-canvas{touch-action:none}html[data-theme="dark"] .viewer-stage{background:#272d35}
