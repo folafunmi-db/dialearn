@@ -26,3 +26,8 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Desktop DIY cards and guide links were visually checked; the page has no horizontal overflow at 390 px.
 - The 3D palette now uses sage, forest and graphite tones, keeping the corrected layout-based canvas sizing and 2× rendering.
 - Updated offline manifest: 86 files, 8.96 MB uncompressed. External DIY guides are links and still need internet.
+
+### Dedicated DIY page (12 October 2026)
+- Added static `/diy/`, with desktop navigation and 44px mobile section links from explore pages.
+- Browser verified phone → DIY lab → Arduino rover guided exploration. DIY page contains two local builds, four credited original guides, and one H1 with ordered H2/H3 headings.
+- No horizontal overflow at 390px or 1069px; mobile spacing inspected. TypeScript and production static export passed. This check does not certify physical hardware builds.
