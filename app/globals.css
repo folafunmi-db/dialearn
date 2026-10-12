@@ -250,3 +250,5 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 .still-mode .hero-pocket-note{transition:none}@media(prefers-reduced-motion:reduce){.hero-pocket-note{transition:none;transform:none}}
 
 .hero-stage .anatomy-art{isolation:isolate}
+
+.viewer-stage[data-hovered='true'] .anatomy-art,.viewer-stage[data-hovered='true'] .anatomy-canvas{cursor:pointer}.viewer-stage[data-dragging='true'] .anatomy-art,.viewer-stage[data-dragging='true'] .anatomy-canvas{cursor:grabbing}.viewer-description strong{color:var(--green)}

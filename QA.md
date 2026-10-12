@@ -49,3 +49,9 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Diagram hint and assembly toggle now occupy a normal-flow row below the hero illustration. The decorative orbit is confined to the illustration.
 - Removed the annotation from the phone. Ideas inside reveals a localized pocket note on mouse entry, keyboard focus or tap; blur dismisses it. Soft opacity/position transitions respect reduced-motion preferences.
 - Browser verified mouse entry, Tab/Shift+Tab reveal and dismissal, and mobile tap at 390px. Hint top is below artwork bottom; note bottom is above description top. No mobile horizontal overflow. Viewport restored. TypeScript and production build passed.
+
+### Three.js pointer and selection
+- Selectable raycast hits now show a pointer cursor; active rotation shows grabbing. Hover/click results are validated against the current age’s available parts.
+- Selected solids have a stronger sage tint and outline. The detail text announces changes politely; the text part selector remains available.
+- Browser verified drone motor hover (computed cursor pointer), click selection, and a 57° drag that preserved the selected motor. At 390px, clicking a propeller changed both selector and description to Propellers without horizontal overflow. Viewport restored.
+- TypeScript and production build passed.
