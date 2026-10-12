@@ -20,7 +20,7 @@
 @media(max-width:720px){.mobile-notebook{display:inline-flex}}
 :root{--muted-ink:#5f6a62}.phone-stage.iso-plate{padding:24px 10px 28px;background:var(--wash);box-shadow:none;--anatomy-paper:#e3e6dc}.hero-stage.iso-plate{padding:0;background:transparent;box-shadow:none}.battery .iso-face-text{fill:#405332}.still-mode *,.still-mode *:before,.still-mode *:after{transition:none!important;animation:none!important}.still-mode{scroll-behavior:auto}.still-mode .discovery-card:hover,.still-mode .discovery-card:hover .card-art>svg,.still-mode .primary:hover{transform:none}
 
-.phone-stage[data-stage='foundations'] [data-stage='engineering'],.phone-stage[data-stage='systems'] [data-stage='engineering']{display:none}.phone-stage [data-component][role='button']{cursor:pointer}.phone-stage [data-component][role='button']:hover .iso-edge,.phone-stage [data-component][role='button']:focus .iso-edge{stroke:var(--green);stroke-width:1.8}.pixel-region .iso-top{fill:#92a77d}.logic-region .iso-top{fill:#526c48}.separator-region .iso-top{fill:#d9dfc2}.stage-choice{border-top:1px solid var(--line);background:var(--wash);padding:15px 30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.stage-choice label{font-size:12px;font-weight:600}.stage-choice select{padding:7px 10px;background:var(--surface);border:1px solid var(--line);border-radius:5px;font-size:12px;color:var(--ink)}.stage-choice>span{font-size:10px;color:var(--green);margin-inline-start:auto}.stage-choice>p{width:100%;font-size:10px;color:var(--muted-ink)}.part-list .detail-part{margin-inline-start:12px;background:var(--wash);font-size:11px}.part-list .detail-part>span{color:var(--green)}
+.phone-stage[data-stage='foundations'] [data-stage='engineering'],.phone-stage[data-stage='systems'] [data-stage='engineering']{display:none}.phone-stage [data-component][role='button']{cursor:pointer}.phone-stage [data-component][role='button']:hover .iso-edge,.phone-stage [data-component][role='button']:focus-visible .iso-edge{stroke:var(--green);stroke-width:1.8}.pixel-region .iso-top{fill:#92a77d}.logic-region .iso-top{fill:#526c48}.separator-region .iso-top{fill:#d9dfc2}.stage-choice{border-top:1px solid var(--line);background:var(--wash);padding:15px 30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.stage-choice label{font-size:12px;font-weight:600}.stage-choice select{padding:7px 10px;background:var(--surface);border:1px solid var(--line);border-radius:5px;font-size:12px;color:var(--ink)}.stage-choice>span{font-size:10px;color:var(--green);margin-inline-start:auto}.stage-choice>p{width:100%;font-size:10px;color:var(--muted-ink)}.part-list .detail-part{margin-inline-start:12px;background:var(--wash);font-size:11px}.part-list .detail-part>span{color:var(--green)}
 @media(max-width:720px){.stage-choice{padding:15px 20px;gap:8px}.stage-choice>span{margin-inline-start:0;width:100%}.part-list .detail-part{margin-inline-start:0;font-size:10px}}
 
 @custom-variant dark (&:is(.dark *));
@@ -141,7 +141,7 @@
 .device-stage .iso-solid[data-tone='lo'] .iso-top{fill:var(--anatomy-shade-1)}
 .device-assembly.active-assembly>.iso-solid .iso-edge{stroke:var(--green)}
 .device-stage[data-stage='foundations'] [data-stage='systems']{pointer-events:none}
-.device-stage [data-component][role='button']:focus{outline:2px solid var(--green);outline-offset:3px}
+.device-stage [data-component][role='button']:focus-visible{outline:2px solid var(--green);outline-offset:3px}
 .reader-devices{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0}
 .reader>section>h2{font-size:30px;margin-top:50px}
 .reader article h4{margin:20px 0 8px;font-size:15px}
@@ -261,3 +261,7 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 @media(max-width:720px){.desktop-theme-toggle{display:none}.viewer-zoom-controls{bottom:8px;inset-inline-end:8px}.mobile-section-nav .mobile-theme-toggle{display:inline-flex;align-items:center;justify-content:center}}
 /* Give long device names room without overflowing a phone viewport. */
 .ui-select-content{min-width:min(260px,calc(100vw - 24px));max-width:calc(100vw - 24px)}
+
+/* Pointer selection has no browser focus box; keyboard navigation stays visible. */
+.phone-stage [tabindex]:focus:not(:focus-visible),.viewer-stage:focus:not(:focus-visible){outline:none}
+.phone-stage .anatomy-art [tabindex]:focus-visible,.viewer-stage:focus-visible{outline:3px solid var(--green);outline-offset:4px}

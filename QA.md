@@ -77,3 +77,7 @@ Source is uploaded only to the requested private GitHub repository and the user�
 ### Production publish and rightward drag verification
 - Published the accumulated fixes to https://dialearn-two.vercel.app (deployment dpl_EA8kTtLDfzuqS3PdC6aXzrq4cfyS). The approval review succeeded on this attempt.
 - On the deployed drone viewer, a 100px rightward drag changed rotation from 0° to 54°. The new zoom controls and theme toggle were present. Screenshot: shots/live-right-drag.png.
+
+### Pointer focus without a box
+- Scoped the pointer-focus reset to anatomy parts and the 3D surface; keyboard focus keeps a 3px green outline. Device detail outlines now use :focus-visible.
+- Local build passed. Clicking the phone battery kept focus and aria-pressed=true with focus-visible=false and outline:none. Tab moved to the chip with focus-visible=true and a 3px green outline; Enter selected it. Screenshot: shots/part-click-no-box.png.
