@@ -60,3 +60,8 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Reversed horizontal and vertical pointer deltas in the shared rotation hook. Easing, sensitivity, drag threshold and click suppression are retained.
 - Browser verified a 100px rightward drag produces approximately −55° yaw, and a 60px downward drag produces approximately +33° tilt. The selected frame remained selected through both gestures.
 - Static production build, including TypeScript checks, passed.
+
+### Clear selected-part highlights
+- Selected solids now use a strong green tint, a restrained emissive accent and a fully opaque green edge outline. Other parts retain their normal materials.
+- Selecting a parent assembly includes its component solids; selecting an individual component highlights that component.
+- Browser screenshots verified all four propellers turn green when selected. Selecting the motors then turns all four motors green and restores the propellers to their normal color. TypeScript/production build passed.
