@@ -93,3 +93,8 @@ Source is uploaded only to the requested private GitHub repository and the userâ
 ### Clear dark-mode selections
 - Dark menus use forest green for selected items and neutral gray for hover. Selected items retain a checkmark and an inset leading accent; RTL reverses that accent. Part-list selections use the same palette.
 - Browser confirmed selected-and-highlighted background #38583f, text #e8f5e2 and checkmark #c5e9b1. Text contrast is 7.05:1 in that state, 8.72:1 when selected without hover, and 10.07:1 for neutral hover. Checkmark contrast is 5.94:1 against selected hover.
+
+### Start unselected and clear from the background
+- Standard phone/device pages and every newly opened 3D viewer start with no selected part. An explicit part deep link still opens its requested lesson. Empty lesson panels and selectors show a translated prompt.
+- Browser checks: phone and drone each had zero pressed part controls on first load; selecting a part then clicking empty SVG background restored zero. 3D started without a checked option, allowed motor selection, preserved it through a drag, then cleared it via canvas background and Escape without closing the modal. At 390px the part selector started empty and the Clear selection button restored its placeholder.
+- Typecheck and production build passed. Screenshot: shots/unselected-drone.png.
