@@ -85,3 +85,7 @@ Source is uploaded only to the requested private GitHub repository and the user�
 ### Neutral charcoal dark theme
 - Replaced green-tinted dark paper, cards, washes, artwork backplates and modal backdrop with neutral charcoal/graphite shades. Green remains on interactive accents and the anatomy models.
 - Palette contrast against the three main dark surfaces: primary text 12.00–15.69:1, secondary text 7.77–10.16:1, green accents 8.50–11.12:1, borders 3.98–5.21:1. These are palette checks, not a full accessibility certification.
+
+### Softer dark-mode borders
+- Changed neutral dark border token from #898c90 to #41454b for quieter card, panel and control edges. The orbit border now follows that token. Earlier border contrast measurements are superseded; these subtle edges are decorative rather than the keyboard focus indicator.
+- Green focus outlines, selected-part accents and high-contrast text are retained.
