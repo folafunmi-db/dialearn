@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.DS_Store
+.site-state/
+.env*
+shots/
+
+.next-dev/
+
+.pnpm-store/
+.openai/
+.vercel/
+.vercel
