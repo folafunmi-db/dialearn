@@ -19,7 +19,7 @@ function machine(id,bounds,azimuth=38,elevation=28){
  const collarWall=(F,poly,s0,s1)=>add(G.prismOf(F,poly,s0,s1,P),A.prism(F,poly,s0,s1),'mid');
  const beam=(a,b,w=4,tone='mid')=>{const F=G.frameAlong(a,G.unit3(G.sub3(b,a))),len=G.len3(G.sub3(b,a)),poly=[[-w/2,-w/2],[w/2,-w/2],[w/2,w/2],[-w/2,w/2]];add(G.prismOf(F,poly,0,len,P),A.prism(F,poly,0,len),tone);};
  const ring=(F,s,r,tone='mid')=>{inks.push({kind:'circle',F,s,r,tone,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});const point=G.pointOf(F,s,r,0);const candidates=R.items.filter(i=>i.piece===group.id);const target=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,point))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,point)))))[0];const previous=lastItem;lastItem=target||lastItem;append(k.lineSvg(G.circleOf(F,s,r,P),{tone}));lastItem=previous;};
- const screw=(x,y,z)=>{const previous=lastItem;const candidates=R.items.filter(i=>i.piece===group.id);lastItem=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z]))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z])))))[0]||lastItem;inks.push({kind:'dot',point:[x,y,z],part:group.id,move:group.move});append(k.dotsSvg([k.iso([x,y,z],P)],{size:.8,tone:'lo'}));lastItem=previous;};
+ const screw=(x,y,z,tone='lo',size=.8)=>{const previous=lastItem;const candidates=R.items.filter(i=>i.piece===group.id);lastItem=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z]))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z])))))[0]||lastItem;inks.push({kind:'dot',point:[x,y,z],tone,size,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});append(k.dotsSvg([k.iso([x,y,z],P)],{size,tone}));lastItem=previous;};
  const detail=(id,stage,fn)=>{scope={id,stage};fn();scope=null;};
  const text=(x,y,z,value,size=7)=>{inks.push({kind:'text',point:[x,y,z],text:value,size,part:group.id,move:group.move});append(k.faceTextSvg(k.topMatrix([x,y],z,P),value,{size,tone:'mid',anchor:'middle'}));};
  const finish=()=>{
@@ -107,4 +107,31 @@ function machine(id,bounds,azimuth=38,elevation=28){
  begin('computer',[0,0,43]);slab(-43,-39,86,50,10,2,'mid',3);detail('processor','engineering',()=>slab(-10,-28,20,19,12,3,'hi'));detail('header','engineering',()=>{slab(-39,-37,78,5,12,4,'lo',0);for(let i=0;i<20;i++){post(-36+i*3.7,-34.5,16,2,.45,'hi');}});for(const x of [-37,-21,-5,11,27])slab(x,-5,10,8,12,5,'mid');text(23,-21,12.1,'Pi',8);
  begin('sensor',[0,0,70]);slab(12,20,34,25,20,2,'mid',2);slab(25,25,9,8,22,2,'hi');detail('sensing','systems',()=>slab(26,26,7,6,24,.3,'hi'));detail('i2c','systems',()=>{for(let i=0;i<4;i++)post(17+i*7,41,22,3,1,'lo');});for(const x of [17,40])screw(x,25,22);
  begin('storage',[0,0,98]);slab(-31,-25,17,17,12,1,'lo',1);for(let i=0;i<5;i++)slab(-28+i*2.5,-24,1.5,4,13,.25,'mid',0);m.finish();
+}
+// Breadboard projects: real board supports and separated component bodies.
+// Jumpers show construction; pin numbers and electrical paths use the build table.
+for(const id of ['breadboard-led','reaction-timer','plant-waterer']){
+ const water=id==='plant-waterer',timer=id==='reaction-timer';
+ const m=machine(id,k.boxCorners({x:-100,y:-65,w:200,d:130},0,135),38,32);
+ const {begin,slab,post,detail,text,screw,beam}=m;
+ begin('breadboard');slab(-98,-60,196,120,0,4,'lo',7);
+ for(const x of [-83,-37])for(const y of [-36,36])post(x,y,4,4,2,'mid');
+ slab(0,-50,88,100,4,7,'hi',3);slab(41,-46,5,92,11,.2,'lo',0);
+ for(let row=0;row<10;row++)for(const x of [9,16,23,30,37,50,57,64,71,78])screw(x,-40+row*9,11,'hi',1.35);
+ detail('contacts','systems',()=>screw(9,-40,11,'hi',1.35));
+ begin('controller',[0,0,30]);slab(-91,-43,62,86,8,2,'mid',3);
+ detail('processor','engineering',()=>slab(-76,-14,18,31,10,4,'hi',1));
+ detail('gpio','systems',()=>{for(const x of [-89,-35])for(let i=0;i<9;i++){slab(x,-34+i*8,4,6,10,4,'lo',.6);screw(x+2,-31+i*8,14);}});
+ slab(-79,-42,19,14,10,9,'mid',2);slab(-52,-38,12,11,10,7,'lo',3);for(const x of [-70,-57])post(x,30,10,5,3,'mid');text(-60,22,10.1,'UNO',6);
+ if(!water){
+  begin('resistor',[0,0,56]);for(const x of [37,50])post(x,5,11,5,.7,'lo');beam([37,5,16],[40,5,19],1,'lo');beam([47,5,19],[50,5,16],1,'lo');slab(40,2,7,6,19,3,'mid',2);for(const x of [41,43,45])slab(x,2,0.6,6,22,.15,'hi',0);
+  begin('led',[0,0,77]);for(const x of [37,50])post(x,-22,11,5,.7,'lo');beam([37,-22,16],[42,-22,19],1,'lo');beam([50,-22,16],[45,-22,19],1,'lo');post(43.5,-22,19,2,5,'mid');post(43.5,-22,21,9,4,'hi');detail('junction','engineering',()=>post(43.5,-22,30,1,2.8,'hi'));
+  if(timer){begin('button',[0,0,58]);for(const x of [37,50])for(const y of [14,32])post(x,y,11,4,.8,'lo');slab(34,11,19,24,15,4,'mid',2);detail('timing','engineering',()=>slab(39,17,9,12,19,.4,'lo',1));post(43.5,23,19.4,6,4,'hi');}
+  begin('wiring',[0,0,102]);for(const x of [-33,9])post(x,32,14,4,.7,'lo');beam([-33,32,18],[9,32,18],1.3,'mid');for(const x of [30,57])post(x,38,11,4,.7,'lo');beam([30,38,15],[57,38,15],1.3,'mid');
+ }else{
+  begin('sensor',[0,0,62]);slab(67,-46,15,53,11,2,'mid',2);slab(65,-5,19,15,13,2,'mid',2);slab(70,-1,9,6,15,2,'hi',1);for(const x of [68,73,78])post(x,7,15,3,.8,'lo');detail('sensing','engineering',()=>slab(68,-45,13,39,13,.4,'hi',1));
+  begin('driver',[0,0,85]);for(const x of [16,53])for(const y of [8,35])post(x,y,11,4,1,'mid');slab(12,4,46,36,15,2,'mid',2);slab(22,10,25,22,17,15,'hi',2);for(let i=0;i<3;i++){slab(15+i*12,34,8,5,17,6,'mid',1);screw(19+i*12,36.5,23);}for(let i=0;i<3;i++)post(14+i*5,7,17,3,.7,'lo');
+  begin('pump',[0,0,108]);slab(69,18,22,29,11,4,'mid',3);post(80,31,15,17,9,'hi');slab(73,25,14,12,32,3,'mid',3);post(80,31,35,8,3,'hi');
+ }
+ m.finish();
 }

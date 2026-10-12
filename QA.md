@@ -35,3 +35,12 @@ Source is uploaded only to the requested private GitHub repository and the user�
 ### Object switch placement
 - Replaced the standalone object-picker row with a compact Change object control in the exploration header, alongside explanation depth.
 - Mobile browser verified phone → dropdown → drone navigation with the current object selected in the menu. Final controls share a row at 390px, with no horizontal overflow. Desktop placement inspected; TypeScript and production build passed.
+
+### DIY anatomy catalog (12 October 2026)
+- Removed the external More build ideas tiles. Homepage and `/diy/` show five local anatomy cards; the main discovery grid retains seven everyday devices.
+- Added breadboard LED, reaction timer and plant waterer pages, source-linked lessons, age-depth parts and guided activities. LED and reaction sketches are downloadable; watering links to GadhaGod’s original build and identifies the UNO/Nano difference.
+- Final full geometry audit passed: LED 52 supported solids, timer 59, waterer 54; no reported failures. Original generated models also passed after dot metadata changes.
+- Browser checked homepage counts, DIY navigation, circuit page, part selection, 390px overflow, assembled/exploded visual fixtures, and dark/reduced-motion rendering. Three.js LED model loaded with a 660px-wide buffer on mobile and rotation worked. Settings and viewport were restored.
+- Fixture line helper returned zero ends but zero tested lines, so this is not an independent line-coverage certification. Full 3D orbit/performance audit and comprehensive 4× junction sweep were not run.
+- Reaction sketch compiled with a temporary C++ Arduino-API simulation; elapsed-time, early-press, release and timeout checks passed. Physical electronics have not been tested.
+- TypeScript/static production build passed. Offline manifest: 105 URLs, 10.90 MB before compression. Full expanded network-off session not rerun.

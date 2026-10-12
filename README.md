@@ -1,6 +1,6 @@
 # Dialearn
 
-A Next.js App Router learning website for ages **12–18**. Explore nine objects, trace inventions and contributors, and try guided Arduino and Raspberry Pi projects.
+A Next.js App Router learning website for ages **12–18**. Explore twelve objects, trace inventions and contributors, and try guided Arduino and Raspberry Pi projects.
 
 ## Run
 
@@ -22,7 +22,7 @@ pnpm start
 ## Deliberate choices
 
 - Next.js static export, no backend, no authentication, telemetry, ads or remote media.
-- The phone lessons and the basic descriptions for eight additional devices have English, French, Portuguese and Arabic text; Arabic uses RTL. **Translations are draft content and require native-speaker review.** Additional languages can be added in `lib/content.ts` and `lib/i18n.ts`.
+- The phone lessons and the basic descriptions for eleven additional devices and projects have English, French, Portuguese and Arabic text; Arabic uses RTL. **Translations are draft content and require native-speaker review.** Additional languages can be added in `lib/content.ts` and `lib/i18n.ts`.
 - Learners choose explanation depth, visual/text mode, larger text, reduced motion and a local discussion context. These settings never gate content or assign ability profiles.
 - A separate `/read/en/` (and `fr`, `pt`, `ar`) reader has all material in server-rendered HTML, usable with JavaScript disabled and printable through the browser.
 - Privacy: only preferences and saved part identifiers are stored in `localStorage` under `dialearn.v1`. Quiz choices stay in memory. Local speech synthesis uses **only on-device voices**; lack of a compatible voice does not block text learning. Shared browsers can expose saved discoveries; this is explained in the UI.
@@ -60,7 +60,7 @@ Run `node scripts/generate-devices.mjs --audit` for recorded-solid support, clea
 
 Age range in Learning settings applies across the website. Each initial taster modal also has a visit-only age selector: its choice is passed through `?stage=` to the dedicated `/explore/[device]/` page, without writing the general preference. The object page can return to the general setting. The 3D modal has its own temporary age selector too.
 
-Library cards navigate directly to dedicated object pages. Start exploring opens a short taster modal with an “Explore this object” link. Each dedicated page has an object selector for switching between all nine devices and projects. All nine objects have dedicated pages for anatomy, explanations, manufacturing, contributors, sources and challenges. The normal diagram remains SVG. The 3D view uses neutral sage housings, graphite power modules, forest green circuit boards and softly lit standard materials. Canvas sizing follows layout dimensions to avoid stretching during modal animations. “Explore in 3D” opens a separate Three.js modal with continuous yaw and tilt dragging, roll and zoom sliders, keyboard arrows, part picking and reset. The renderer loads only on opening, renders at up to 2× resolution with a 1.5-million-pixel budget and stops drawing when idle, hidden or offscreen. Reduced motion removes the easing tail. WebGL-unavailable devices retain the normal diagram and all lessons.
+Library cards navigate directly to dedicated object pages. Start exploring opens a short taster modal with an “Explore this object” link. Each dedicated page has an object selector for switching between all twelve devices and projects. All twelve objects have dedicated pages for anatomy, explanations, manufacturing, contributors, sources and challenges. The normal diagram remains SVG. The 3D view uses neutral sage housings, graphite power modules, forest green circuit boards and softly lit standard materials. Canvas sizing follows layout dimensions to avoid stretching during modal animations. “Explore in 3D” opens a separate Three.js modal with continuous yaw and tilt dragging, roll and zoom sliders, keyboard arrows, part picking and reset. The renderer loads only on opening, renders at up to 2× resolution with a 1.5-million-pixel budget and stops drawing when idle, hidden or offscreen. Reduced motion removes the easing tail. WebGL-unavailable devices retain the normal diagram and all lessons.
 
 Hover descriptions anchor to the selected solid or SVG element. They use `pointer-events: none` throughout, so clicks and drags reach the object. Popups and page transitions use restrained motion with reduced-motion overrides.
 
@@ -72,10 +72,10 @@ The source is intended for the private `folafunmi-db/dialearn` repository. `verc
 
 ## DIY lab and identity
 
-The landing page separates seven device explorations from the DIY lab, with a dedicated `/diy/` page. Desktop navigation and a 44px mobile section switch link to DIY from every object page. Arduino rover and Raspberry Pi station remain complete on-site guided builds. Four additional project ideas link to credited originals: plant watering and a reaction timer from Arduino Project Hub, plus official Raspberry Pi robotics and camera resources. They are curated examples, not a numerical popularity ranking. Source view counts and selection evidence are recorded in `lib/diy-resources.ts`; external guides require internet.
+The landing page separates seven device explorations from five DIY anatomy projects, with a dedicated `/diy/` page. The DIY cards open local anatomy pages for an Arduino rover, Raspberry Pi station, Arduino breadboard LED, reaction timer and plant waterer. There is no separate external “More build ideas” grid. LED and reaction projects include downloadable educational starters; watering is a planning lesson linked to GadhaGod’s original hardware guide. Original guide links and author credits live with the project lessons. External sources need internet. Desktop navigation and mobile section links reach the DIY lab from every object page.
 
 The logo is an open book over two stacked learning layers. Matching SVG, ICO and Apple touch icons are in `app/`; the mark stays clear at small sizes. The 3D palette uses consistent forest/sage accents and neutral graphite materials with high-resolution canvas rendering.
 
 The brand mark uses offset book spines and an open book with a discovery spark. `scripts/generate-brand.mjs` rasterizes the SVG icon into the 16/32/48px ICO and 180px Apple touch icon during builds.
 
-Object switching lives in the exploration heading as a compact “Change object” control, alongside the explanation-depth buttons. It lists all nine objects and keeps the selected option indicated in the menu.
+Object switching lives in the exploration heading as a compact “Change object” control, alongside the explanation-depth buttons. It lists all available objects and keeps the selected option indicated in the menu.
