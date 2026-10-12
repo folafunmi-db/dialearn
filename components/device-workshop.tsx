@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {devices,deviceCopy,deviceSources,type DeviceId} from '@/lib/devices';
 import {ui} from '@/lib/i18n';
 import type {Lang} from '@/lib/content';
@@ -12,7 +12,7 @@ import {Icon} from './icons';
 import {AnatomyTooltip,elementAnchor,type Anchor} from './anatomy-tooltip';
 import {ProjectGuide} from './project-guide';
 import {Explore3D} from './explore-3d';
-export function DeviceWorkshop({id,lang,stage,onStage,textOnly,still,saved,onSave,initialPart}:{id:DeviceId;lang:Lang;stage:Stage;onStage:(s:Stage)=>void;textOnly:boolean;still:boolean;saved:string[];onSave:(key:string)=>void;initialPart?:string}){
+export function DeviceWorkshop({id,lang,stage,onStage,textOnly,still,saved,onSave,initialPart,headingAction}:{id:DeviceId;lang:Lang;stage:Stage;onStage:(s:Stage)=>void;textOnly:boolean;still:boolean;saved:string[];onSave:(key:string)=>void;initialPart?:string;headingAction?:ReactNode}){
  const device=devices.find(d=>d.id===id)!,t=ui[lang],c=deviceCopy[lang],st=stageCopy[lang];
  const available=device.parts.filter(p=>stages.indexOf(p.stage)<=stages.indexOf(stage));
  const [selected,setSelected]=useState(initialPart||device.parts[0].id),[opened,setOpened]=useState(true),[expanded,setExpanded]=useState(false),[tab,setTab]=useState('works'),[deep,setDeep]=useState(stage!=='foundations'),[preview,setPreview]=useState<string|null>(null),[anchor,setAnchor]=useState<Anchor|null>(null),[choice,setChoice]=useState<number|null>(null),[checked,setChecked]=useState(false),[front,setFront]=useState(42),[rear,setRear]=useState(21);
@@ -26,7 +26,7 @@ export function DeviceWorkshop({id,lang,stage,onStage,textOnly,still,saved,onSav
  function target(node:EventTarget|null){const el=node as Element;const inner=el?.closest?.('[data-component]')?.getAttribute('data-component');if(inner&&available.some(p=>p.id===inner))return inner;return el?.closest?.('[data-assembly]')?.getAttribute('data-assembly')||null;}
  const previewPart=device.parts.find(p=>p.id===preview);
  return <>
- <div className="workshop-heading"><div><h1>{device.name[lang]}</h1><p>{device.description[lang]}</p></div><div className="depth-switch" role="group" aria-label={t.depth}>{[false,true].map(v=><Button key={String(v)} variant="ghost" aria-pressed={deep===v} className={deep===v?'active':''} onClick={()=>setDeep(v)}>{v?t.deep:t.quick}</Button>)}</div></div>
+ <div className="workshop-heading"><div><h1>{device.name[lang]}</h1><p>{device.description[lang]}</p></div><div className="workshop-header-controls">{headingAction}<div className="depth-switch" role="group" aria-label={t.depth}>{[false,true].map(v=><Button key={String(v)} variant="ghost" aria-pressed={deep===v} className={deep===v?'active':''} onClick={()=>setDeep(v)}>{v?t.deep:t.quick}</Button>)}</div></div></div>
  <div className="mobile-part-picker"><label htmlFor="device-part">{t.choosePart}</label><ChoiceSelect id="device-part" label={t.choosePart} value={lesson.id} onChange={pick} options={available.map(p=>({value:p.id,label:p.name[lang]}))}/></div>
  <div className="workshop-grid"><div className="workshop-model">
  {textOnly?<div className="text-model"><Icon name="layers" size={40}/><p>{t.choosePart}</p></div>:<div className={`model-illustration ${expanded?'diagram-expanded':''}`}>

@@ -77,3 +77,5 @@ The landing page separates seven device explorations from the DIY lab, with a de
 The logo is an open book over two stacked learning layers. Matching SVG, ICO and Apple touch icons are in `app/`; the mark stays clear at small sizes. The 3D palette uses consistent forest/sage accents and neutral graphite materials with high-resolution canvas rendering.
 
 The brand mark uses offset book spines and an open book with a discovery spark. `scripts/generate-brand.mjs` rasterizes the SVG icon into the 16/32/48px ICO and 180px Apple touch icon during builds.
+
+Object switching lives in the exploration heading as a compact “Change object” control, alongside the explanation-depth buttons. It lists all nine objects and keeps the selected option indicated in the menu.

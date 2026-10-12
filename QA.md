@@ -31,3 +31,7 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Added static `/diy/`, with desktop navigation and 44px mobile section links from explore pages.
 - Browser verified phone → DIY lab → Arduino rover guided exploration. DIY page contains two local builds, four credited original guides, and one H1 with ordered H2/H3 headings.
 - No horizontal overflow at 390px or 1069px; mobile spacing inspected. TypeScript and production static export passed. This check does not certify physical hardware builds.
+
+### Object switch placement
+- Replaced the standalone object-picker row with a compact Change object control in the exploration header, alongside explanation depth.
+- Mobile browser verified phone → dropdown → drone navigation with the current object selected in the menu. Final controls share a row at 390px, with no horizontal overflow. Desktop placement inspected; TypeScript and production build passed.

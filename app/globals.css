@@ -219,7 +219,7 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 .viewer-age{padding:0 24px}.viewer-age .taster-age{margin-top:14px}@media(max-width:720px){.viewer-age{padding:0 16px}.viewer-stage{height:min(32dvh,320px)}}
 @media(max-width:720px){.phone-stage .stage-bottom,.phone-stage.hero-stage .stage-bottom{position:static;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 4px 0}.phone-stage .explore-3d-button{margin-top:12px}.viewer-stage.phone-stage{padding:0}.viewer-stage .anatomy-art{height:100%}}
 
-.object-picker{display:flex;align-items:center;gap:18px;padding:0 30px 20px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted-ink)}.object-picker .ui-select-trigger{width:min(360px,100%);min-width:0;min-height:44px;color:var(--ink)}.object-picker .ui-select-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.card-open{display:block;text-decoration:none;color:inherit}@media(max-width:720px){.object-picker{display:block;padding:0 16px 16px}.object-picker .ui-select-trigger{margin-top:7px;width:100%}}
+.card-open{display:block;text-decoration:none;color:inherit}
 
 .viewer-stage{background:#f1f3ec}.viewer-stage .anatomy-canvas{touch-action:none}html[data-theme="dark"] .viewer-stage{background:#292f27}
 
@@ -233,3 +233,8 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 /* Keep both learning sections reachable from mobile object pages. */
 .mobile-section-nav{display:none}.diy-section .section-heading h1{font-size:clamp(30px,4vw,42px);font-weight:600;letter-spacing:-1.5px;line-height:1.15;margin:12px 0 10px}.dedicated-main>.diy-section{border-top:0;padding-top:25px}
 @media(max-width:720px){.mobile-section-nav{display:flex;gap:8px;padding:8px 20px;border-bottom:1px solid var(--line)}.mobile-section-nav a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;flex:1;border-radius:8px;font-size:13px;color:var(--muted-ink);transition:background .2s,color .2s}.mobile-section-nav a[aria-current=page]{background:var(--green);color:var(--paper)}.dedicated-main>.diy-section{padding-top:28px;margin:0 22px}}
+
+.workshop-header-controls{display:flex;align-items:center;gap:12px;flex-shrink:0}.object-switch .ui-select-trigger{min-height:44px;font-size:12px;gap:12px;background:transparent;border-color:var(--line);box-shadow:none}.object-switch .ui-select-trigger:hover{background:var(--wash)}
+@media(max-width:920px){.dedicated-workshop .workshop-heading{align-items:flex-start;flex-direction:column}.dedicated-workshop .workshop-header-controls{width:100%;justify-content:space-between;flex-wrap:wrap}.dedicated-workshop .workshop-heading .depth-switch button{min-height:36px}}
+@media(max-width:720px){.workshop-header-controls{gap:8px}.object-switch .ui-select-trigger{font-size:12px;padding-inline:10px}.dedicated-workshop .workshop-heading .depth-switch button{font-size:10px;padding:7px 8px;min-height:44px}.dedicated-workshop .workshop-heading{gap:16px}.dedicated-workshop .workshop-header-controls{gap:8px}}
+@media(max-width:720px){.dedicated-workshop .workshop-header-controls .depth-switch{width:auto}.dedicated-workshop .workshop-header-controls .depth-switch button{flex:initial;white-space:nowrap}}
