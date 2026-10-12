@@ -227,3 +227,5 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 @media(max-width:920px){.diy-resources{grid-template-columns:1fr 1fr}.diy-stamp{margin-top:15px}}@media(max-width:720px){.diy-section{padding:35px 0}.diy-featured{grid-template-columns:1fr;gap:18px}.diy-build-copy{padding:20px}.diy-build-art{height:220px}.diy-resource-heading{display:block}.diy-resource-heading p{margin-top:10px}.diy-resources{grid-template-columns:1fr}.diy-resource-card{padding:20px}.resource-glyph{margin:0 auto 12px}}
 
 .hero-actions{flex-wrap:wrap}.diy-hero-link{min-height:44px;font-size:12px}
+
+.large-text .diy-build-copy>p,.large-text .diy-resource-card>p{font-size:16px}.large-text .diy-resource-heading p,.large-text .diy-reference-note{font-size:14px}.still-mode .diy-build-card:hover{transform:none}@media(prefers-reduced-motion:reduce){.diy-build-card:hover{transform:none}}
