@@ -89,3 +89,7 @@ Source is uploaded only to the requested private GitHub repository and the userâ
 ### Softer dark-mode borders
 - Changed neutral dark border token from #898c90 to #41454b for quieter card, panel and control edges. The orbit border now follows that token. Earlier border contrast measurements are superseded; these subtle edges are decorative rather than the keyboard focus indicator.
 - Green focus outlines, selected-part accents and high-contrast text are retained.
+
+### Clear dark-mode selections
+- Dark menus use forest green for selected items and neutral gray for hover. Selected items retain a checkmark and an inset leading accent; RTL reverses that accent. Part-list selections use the same palette.
+- Browser confirmed selected-and-highlighted background #38583f, text #e8f5e2 and checkmark #c5e9b1. Text contrast is 7.05:1 in that state, 8.72:1 when selected without hover, and 10.07:1 for neutral hover. Checkmark contrast is 5.94:1 against selected hover.

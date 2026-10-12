@@ -269,3 +269,12 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 /* Neutral dark surfaces keep green for interactive accents and anatomy. */
 :root[data-theme="dark"] .card-art{background:var(--wash)}
 :root[data-theme="dark"] .dialog-backdrop{background:#0009}
+/* Distinguish selection from hover in dark menus without pale fills. */
+:root[data-theme='dark'] .ui-select-content [data-slot='select-item'][data-highlighted]{background:#363b42;color:#f2f2f0}
+:root[data-theme='dark'] .ui-select-content [data-slot='select-item'][data-selected],:root[data-theme='dark'] .part-list button.selected{background:#2f4938;color:#e8f5e2;box-shadow:inset 3px 0 0 #9ac884}
+:root[data-theme='dark'] .ui-select-content [data-slot='select-item'][data-selected][data-highlighted]{background:#38583f;color:#e8f5e2}
+:root[data-theme='dark'] .ui-select-content [data-slot='select-item'][data-selected] [data-slot='select-item-text']{color:inherit}
+:root[data-theme='dark'] .ui-select-content [data-slot='select-item'][data-selected] .select-item-indicator{color:#c5e9b1}
+:root[data-theme='dark'] .part-list button.selected{border-color:transparent}
+:root[data-theme='dark'] .part-list button.selected>span{color:#c5e9b1}
+[dir='rtl'][data-theme='dark'] .ui-select-content [data-slot='select-item'][data-selected],[dir='rtl'][data-theme='dark'] .part-list button.selected{box-shadow:inset -3px 0 0 #9ac884}
