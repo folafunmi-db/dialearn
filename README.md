@@ -68,4 +68,4 @@ Arduino rover and Raspberry Pi weather station pages include parts, wiring table
 
 ## GitHub and Vercel
 
-The source is intended for the private `folafunmi-db/dialearn` repository. `vercel.json` configures a Next.js static build with `pnpm build` and `out/` output, plus response headers. No server secrets are needed. `.env*`, `.vercel/`, `.openai/`, screenshots, caches, dependencies and build outputs are excluded from Git. The connected Vercel project deploys commits on `main`.
+The source is intended for the private `folafunmi-db/dialearn` repository. `vercel.json` configures a static deployment (framework `null`) of the Next.js export with `pnpm build` and `out/` output, plus response headers. No server secrets are needed. `.env*`, `.vercel/`, `.openai/`, screenshots, caches, dependencies and build outputs are excluded from Git. The connected Vercel project deploys commits on `main`.
