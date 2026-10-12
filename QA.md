@@ -107,3 +107,10 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Main page, header/footer bands, principles divider, DIY divider and curiosity background span the viewport. Inner content is centered at up to 1190px plus responsive gutters. Reader pages retain their separate reading width.
 - Browser at 1920px measured full-width bands at 1920px and hero/header containers at 1266px with 38px gutters (1190px contents). No horizontal overflow at 1920px or 1069px. Home, drone and DIY pages each fit 390px without overflow; object header remains sticky.
 - Typecheck and production build passed. Screenshot: shots/full-width-desktop.png.
+
+### Full-screen 3D exploration
+- Replaced the small scrolling viewer with a full-viewport dialog. Canvas fills the workspace beneath the compact header; part picker, zoom buttons and rotation dock float over it. Tilt/roll/zoom sliders remain under Adjust view.
+- Selected-part explanations appear in a floating, dismissible panel only after selection. The panel sits at the top right on desktop and above the dock on mobile. Selection updates an aria-live message; clearing from the panel returns focus to the canvas. Escape on a selected canvas clears it; Escape with no selection can close the dialog.
+- Camera fitting now accounts for portrait aspect ratio so the full object fits at default zoom.
+- Browser checked 1280×720 (canvas 1280×654), 390×844 (canvas 390×735) and 844×390 (canvas 844×325), with no horizontal overflow. Motor picking opened the panel, dragging preserved it, zoom reached 120%, close/background clearing hid it, and expanded mobile sliders remained reachable. Typecheck and production build passed.
+- Screenshots: shots/fullscreen-3d-selected.png and shots/fullscreen-3d-mobile.png.

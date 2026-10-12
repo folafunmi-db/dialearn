@@ -320,3 +320,57 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
  .site-main .diy-page-band{margin-inline:0}
  .diy-page-band>.diy-section{margin-inline:auto;padding-top:28px}
 }
+/* Full-screen 3D workspace with controls and part lessons above the canvas. */
+.dialog.viewer-dialog{inset:0;inset-inline-start:0;left:0;top:0;right:0;bottom:0;transform:none!important;translate:none!important;width:100%;max-width:none!important;height:100dvh;max-height:none;border:0;border-radius:0;padding:0;overflow:hidden;display:flex;flex-direction:column}
+.dialog.viewer-dialog[data-open]{animation:soft-backdrop-in 180ms ease both!important}
+.dialog.viewer-dialog[data-closed]{animation:soft-backdrop-out 120ms ease both!important}
+.viewer-dialog .dialog-header{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto 44px;gap:16px;padding:10px 20px;min-height:66px;flex-shrink:0;z-index:12}
+.viewer-dialog .dialog-header h2{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viewer-dialog .dialog-header>.icon-button{width:44px;height:44px}
+.viewer-dialog .viewer-age{padding:0}
+.viewer-dialog .viewer-age .taster-age{margin:0;gap:12px;font-size:12px;flex-wrap:nowrap}
+.viewer-dialog .viewer-age .ui-select-trigger{min-height:44px}
+.viewer-dialog .viewer-body{padding:0;position:relative;flex:1;min-height:0;isolation:isolate}
+.viewer-dialog .viewer-stage{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;margin:0;overflow:hidden}
+.viewer-dialog .viewer-stage:focus-visible{outline-offset:-4px}
+.viewer-selection-controls,.viewer-control-dock,.viewer-part-window{position:absolute;z-index:6;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 26px #00000016}
+.viewer-selection-controls{top:16px;inset-inline-start:16px;padding:10px 12px;max-width:calc(100% - 32px)}
+.viewer-selection-controls .viewer-part{margin:0}
+.viewer-selection-controls .ui-select-trigger{min-width:200px;max-width:280px;min-height:44px}
+.viewer-selection-controls .microcopy{margin-top:6px;font-size:11px;max-width:280px}
+.viewer-part-window{top:16px;inset-inline-end:16px;width:320px;max-width:calc(100% - 32px);padding:14px 16px;max-height:35%;overflow-y:auto;animation:soft-content-in 180ms var(--soft-ease)}
+.viewer-part-window-heading{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.viewer-part-window h3{font-size:17px;line-height:1.4;color:var(--green);font-weight:600}
+.viewer-part-window .icon-button{width:44px;height:44px;flex-shrink:0}
+.viewer-part-window>p{font-size:14px;line-height:1.8;color:var(--ink);margin-top:8px}
+.viewer-control-dock{bottom:max(16px,env(safe-area-inset-bottom));inset-inline-start:16px;padding:10px 12px;max-width:calc(100% - 190px)}
+.viewer-control-dock .viewer-toolbar{margin:0;gap:8px;flex-wrap:nowrap}
+.viewer-reset{display:flex;align-items:center;gap:8px}
+.viewer-reset>span:first-child{font-size:22px}
+.viewer-extra-controls{margin-top:7px}
+.viewer-extra-controls summary{cursor:pointer;min-height:32px;padding:6px 2px;font-size:12px;color:var(--muted-ink)}
+.viewer-extra-controls .viewer-adjustments{margin-top:6px;padding-bottom:0;gap:16px}
+.viewer-dialog .viewer-zoom-controls{bottom:max(16px,env(safe-area-inset-bottom));inset-inline-end:16px}
+@media(max-width:720px){
+ .viewer-dialog .dialog-header{grid-template-columns:minmax(0,1fr) 44px;gap:4px 12px;padding:8px 12px}
+ .viewer-dialog .dialog-header>.icon-button{grid-column:2;grid-row:1}
+ .viewer-dialog .viewer-age{grid-row:2;grid-column:1/-1}
+ .viewer-dialog .viewer-age .taster-age{justify-content:space-between}
+ .viewer-dialog .viewer-age .ui-select-trigger{max-width:250px;font-size:12px}
+ .viewer-selection-controls{top:12px;inset-inline-start:12px;padding:8px 10px}
+ .viewer-selection-controls .ui-select-trigger{min-width:170px;max-width:230px;font-size:12px}
+ .viewer-selection-controls .microcopy{max-width:230px;font-size:10px}
+ .viewer-dialog .viewer-zoom-controls{top:110px;bottom:auto;inset-inline-end:12px}
+ .viewer-control-dock{inset-inline:12px;bottom:max(12px,env(safe-area-inset-bottom));max-width:none;padding:10px}
+ .viewer-control-dock .viewer-toolbar{display:grid;grid-template-columns:44px 26px 44px minmax(0,1fr) 44px;gap:6px}
+ .viewer-control-dock .viewer-toolbar output{min-width:0;font-size:10px}
+ .viewer-control-dock .viewer-toolbar button{padding-inline:6px;font-size:11px;gap:6px}
+ .viewer-reset-label{display:none}
+ .viewer-reset{justify-content:center}
+ .viewer-part-window{inset-inline:12px;top:auto;bottom:138px;width:auto;max-width:none;max-height:25dvh;padding:10px 14px}
+ .viewer-part-window h3{font-size:15px}
+ .viewer-part-window>p{font-size:13px;line-height:1.65;margin-top:4px}
+ .viewer-control-dock:has(.viewer-extra-controls[open]){z-index:9}
+ .viewer-body:has(.viewer-extra-controls[open]) .viewer-part-window{bottom:210px}
+}
+@media(max-height:500px) and (orientation:landscape){.viewer-dialog .dialog-header{grid-template-columns:minmax(0,1fr) auto 44px;min-height:56px}.viewer-dialog .viewer-age{grid-row:1;grid-column:2}.viewer-dialog .dialog-header>.icon-button{grid-column:3}.viewer-part-window{top:12px;bottom:auto;inset-inline-start:auto;inset-inline-end:12px;width:260px;max-height:50%}.viewer-dialog .viewer-zoom-controls{top:auto;bottom:12px}}
