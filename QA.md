@@ -55,3 +55,8 @@ Source is uploaded only to the requested private GitHub repository and the user�
 - Selected solids have a stronger sage tint and outline. The detail text announces changes politely; the text part selector remains available.
 - Browser verified drone motor hover (computed cursor pointer), click selection, and a 57° drag that preserved the selected motor. At 390px, clicking a propeller changed both selector and description to Propellers without horizontal overflow. Viewport restored.
 - TypeScript and production build passed.
+
+### Corrected 3D drag directions
+- Reversed horizontal and vertical pointer deltas in the shared rotation hook. Easing, sensitivity, drag threshold and click suppression are retained.
+- Browser verified a 100px rightward drag produces approximately −55° yaw, and a 60px downward drag produces approximately +33° tilt. The selected frame remained selected through both gestures.
+- Static production build, including TypeScript checks, passed.
