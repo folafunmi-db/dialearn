@@ -98,3 +98,7 @@ Source is uploaded only to the requested private GitHub repository and the userâ
 - Standard phone/device pages and every newly opened 3D viewer start with no selected part. An explicit part deep link still opens its requested lesson. Empty lesson panels and selectors show a translated prompt.
 - Browser checks: phone and drone each had zero pressed part controls on first load; selecting a part then clicking empty SVG background restored zero. 3D started without a checked option, allowed motor selection, preserved it through a drag, then cleared it via canvas background and Escape without closing the modal. At 390px the part selector started empty and the Clear selection button restored its placeholder.
 - Typecheck and production build passed. Screenshot: shots/unselected-drone.png.
+
+### Hero copy entrance
+- Hero eyebrow, heading, description, actions and notes fade upward by 12px over 620ms, staggered at 40/100/170/230/290ms. Transform animation leaves layout dimensions unchanged.
+- Browser inspected the sequence during entrance and confirmed the delays and progressive opacity. Reduce motion disabled the animation with opacity remaining 1; restored the original preference after checking. Keyboard focus skips the entrance for the focused group. Production build passed.

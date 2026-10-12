@@ -279,3 +279,14 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 :root[data-theme='dark'] .part-list button.selected>span{color:#c5e9b1}
 [dir='rtl'][data-theme='dark'] .ui-select-content [data-slot='select-item'][data-selected],[dir='rtl'][data-theme='dark'] .part-list button.selected{box-shadow:inset -3px 0 0 #9ac884}
 .selection-prompt{padding:28px 0;max-width:400px}.selection-prompt h3{font-size:23px;letter-spacing:-.5px}.selection-prompt p{margin-top:14px;line-height:1.8;color:var(--muted-ink);font-size:14px}.clear-selection{min-height:44px;margin-bottom:12px;color:var(--green)}
+/* Let the hero copy arrive in a quiet sequence without moving the layout. */
+@keyframes hero-copy-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+ html:not(.still-mode) .hero-copy>:where(.eyebrow,h1,.hero-description,.hero-actions,.hero-notes){animation:hero-copy-enter 620ms var(--soft-ease) both}
+ html:not(.still-mode) .hero-copy>.eyebrow{animation-delay:40ms}
+ html:not(.still-mode) .hero-copy>h1{animation-delay:100ms}
+ html:not(.still-mode) .hero-copy>.hero-description{animation-delay:170ms}
+ html:not(.still-mode) .hero-copy>.hero-actions{animation-delay:230ms}
+ html:not(.still-mode) .hero-copy>.hero-notes{animation-delay:290ms}
+ html:not(.still-mode) .hero-copy>:focus-within{animation:none}
+}
