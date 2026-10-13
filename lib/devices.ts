@@ -1,14 +1,15 @@
+import {advancedDevices,advancedSources,type AdvancedDeviceId} from './advanced-devices';
 import {engineeringParts,engineeringSources} from './deep-parts';
 import {circuitDevices,circuitSources} from './circuit-devices';
 import {makerDevices,makerSources} from './maker-devices';
 import type {Lang} from './content';
 import type {Stage} from './stages';
-export type DeviceId='controller'|'console'|'car'|'solar'|'bicycle'|'drone'|'arduino-rover'|'pi-station'|'breadboard-led'|'reaction-timer'|'plant-waterer';
+export type DeviceId=AdvancedDeviceId|'controller'|'console'|'car'|'solar'|'bicycle'|'drone'|'arduino-rover'|'pi-station'|'breadboard-led'|'reaction-timer'|'plant-waterer';
 type Translation=Record<Lang,string>;
 const tr=(en:string,fr:string,pt:string,ar:string):Translation=>({en,fr,pt,ar});
 export type DevicePart={id:string;stage:Stage;name:Translation;simple:Translation;deep:string;engineering:string;made:string;story:string;refs:string[]};
-export type Device={id:DeviceId;name:Translation;description:Translation;category:'devices'|'energy'|'electronics';parts:DevicePart[];question:string;options:string[];correct:number;answer:string};
-export const deviceSources=[...engineeringSources,...makerSources,...circuitSources,
+export type Device={id:DeviceId;name:Translation;description:Translation;category:'devices'|'energy'|'electronics';complex?:boolean;presentation?:'site'|'exploded';hasMotion?:boolean;parts:DevicePart[];question:string;options:string[];correct:number;answer:string};
+export const deviceSources=[...advancedSources,...engineeringSources,...makerSources,...circuitSources,
  {id:'gamepad',name:'Microsoft Learn',title:'Gamepad inputs and vibration',url:'https://learn.microsoft.com/en-us/windows/uwp/gaming/gamepad-and-vibration'},
  {id:'xbox',name:'Xbox engineering team',title:'The new generation Xbox controller',url:'https://news.xbox.com/en-us/2013/06/06/xbox-one-controller-feature/'},
  {id:'nintendo',name:'Nintendo',title:'Switch technical specifications',url:'https://www.nintendo.com/us/gaming-systems/switch/tech-specs/'},
@@ -30,7 +31,7 @@ const gameHistory='Ralph Baer and colleagues developed the Brown Box television 
 const bikeHistory='The safety bicycle brought together similar-sized wheels, chain drive and gearing. John Kemp Starley helped develop this design in the 1880s. John Boyd Dunlop later helped popularise pneumatic bicycle tyres.';
 const evHistory='Electric vehicles emerged through many experiments in the 19th century. Rechargeable batteries, practical motors and modern power electronics developed separately; there is no single inventor of the complete modern EV.';
 const ledHistory='Isamu Akasaki, Hiroshi Amano and Shuji Nakamura received the 2014 Physics Nobel Prize for efficient blue LEDs. Blue LEDs with phosphors helped enable efficient white lighting.';
-export const devices:Device[]=[...makerDevices,...circuitDevices,
+export const devices:Device[]=[...advancedDevices,...makerDevices,...circuitDevices,
  {id:'controller',name:tr('Game controller','Manette de jeu','Controle de jogo','وحدة تحكم الألعاب'),description:tr('Follow a button press from your fingers to the game.','Suivez un appui, de vos doigts au jeu.','Siga um toque dos seus dedos até o jogo.','تتبّع ضغطة الزر من أصابعك إلى اللعبة.'),category:'electronics',question:'Which part turns a movement of the stick into an electrical input?',options:['The stick sensors','The outer shell','The rumble weight'],correct:0,answer:'Sensors measure stick position; electronics report that input to the game.',parts:[
  p('shell',tr('Shell & grips','Coque et poignées','Carcaça e empunhaduras','الهيكل والمقابض'),tr('The shell holds the parts and gives your hands a comfortable grip.','La coque maintient les pièces et facilite la prise en main.','A carcaça segura as peças e facilita a pegada.','يثبّت الهيكل الأجزاء ويساعد اليدين على الإمساك.'),'Separate moulded halves enclose the assemblies. Screw posts locate the board and keep controls aligned.','Plastic is injection moulded into shells with ribs and screw posts, then assembled around the controls.',gameHistory,['gameshistory','xbox']),
  p('rumble',tr('Rumble motors','Moteurs de vibration','Motores de vibração','محركات الاهتزاز'),tr('Small motors make the controller vibrate when the game asks it to.','De petits moteurs font vibrer la manette à la demande du jeu.','Pequenos motores fazem o controle vibrar quando o jogo pede.','محركات صغيرة تهزّ وحدة التحكم بأمر من اللعبة.'),'This example uses eccentric rotating mass motors in the grips. An off-centre weight makes the casing vibrate. Other controllers use different haptic actuators.','Motor assemblies and eccentric weights are mounted inside the grips with electrical contacts.','Xbox engineering teams added separate grip and trigger vibration motors to the Xbox One controller. This model shows only the grip motors.',['gamepad','xbox']),

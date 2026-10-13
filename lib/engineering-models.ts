@@ -1,5 +1,6 @@
+import {advancedModels} from './advanced-devices';
 // Pure teaching models. Assumptions appear beside every control.
-export const models={
+export const models={...advancedModels,
  phone:{label:'Power demand',unit:'W',min:1,max:12,step:.5,initial:4,note:'Assume 15 Wh stored and 85% usable energy; constant demand.',formula:'15 × 0.85 ÷ power',result:(v:number)=>({value:12.75/v,unit:'hours',label:'Estimated runtime'})},
  drone:{label:'Phase current',unit:'A',min:0,max:12,step:.5,initial:4,note:'One phase, assumed resistance 0.15 Ω. Excludes iron, switching and mechanical losses.',formula:'current² × 0.15',result:(v:number)=>({value:v*v*.15,unit:'W',label:'Phase copper loss'})},
  controller:{label:'Analogue input',unit:'V',min:0,max:5,step:.01,initial:2.5,note:'Ideal 10-bit converter with a 5 V reference; noise and calibration error omitted.',formula:'round(voltage ÷ 5 × 1023)',result:(v:number)=>({value:Math.round(v/5*1023),unit:'code',label:'Quantised input'})},

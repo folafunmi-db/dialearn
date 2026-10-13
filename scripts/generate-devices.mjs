@@ -1,3 +1,4 @@
+import {buildAdvanced} from './advanced-geometry.mjs';
 import {engineeringGeometry} from './engineering-geometry.mjs';
 import {writeFileSync,mkdirSync} from 'node:fs';
 import * as k from '../vendor/anatomy/iso-kit.mjs';
@@ -138,3 +139,5 @@ for(const id of ['breadboard-led','reaction-timer','plant-waterer']){
  }
  m.finish();
 }
+
+buildAdvanced(machine);

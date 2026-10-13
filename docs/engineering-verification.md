@@ -35,3 +35,15 @@ The phone's existing non-recorded SVG generator has not received the recorder-ba
 - https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
 
 Individual notebooks and part lessons link their applicable sources. Sources describe representative implementations; illustrated layouts, parameters and pole counts are teaching choices.
+
+## Expanded catalogue and community release
+
+The catalogue now contains 48 subjects. The 36 additions include 21 mechanical, infrastructure and industrial systems and 15 distinct household devices. Duplicate user suggestions are represented once. Each addition has ten selectable assemblies, stage-dependent access, a sourced engineering notebook, a bounded calculation and an object-specific prediction question. These are representative educational models, not complete manufacturer drawings. New titles are translated; new technical prose and part labels explicitly fall back to English pending review.
+
+All 48 guide paths, references, component IDs, motion axes and experiment boundaries are checked by `npm run check`. Slider-crank checks compare rod endpoints against piston pins across 73 phases. The community migration is executed in embedded Postgres to exercise publishing permissions, private drafts/progress, notifications, reviewed discussions, upload access and account deletion. Hosted authentication, email and storage still require Supabase configuration and real-account acceptance tests; see `community-setup.md`.
+
+The renderer merges geometry only within the same part, stage, material, mounting movement and mechanism joint. Browser diagnostics for the car engine showed 128 recorded solids rendered as 21 meshes and 52 draw calls; this is a draw-count observation, not a frame-rate guarantee. Browser checks covered 3D selection, zoom and multi-axis dragging, all 36 new SVG subjects, and the searchable 48-object card picker at desktop and 390-pixel mobile widths. The picker supports keyboard navigation and matches the explanation controls at 48 pixels high. Mobile hover text measures its natural height and repositions on resize.
+
+The build runs the recorder geometry audit for all 47 non-phone subjects. The earlier verification limits for dynamic collision, formal full-orbit ordering, measured performance and the phone generator still apply. Offline downloads disclose their sizes before saving and provide a text-only option; unused open-state SVG exports are excluded from the full download. Community data is never included in either pack.
+
+Release audit evidence: the full recorded run passed 46 subjects and found two unsupported camera display solids. Moving the camera's display brace to the flat supported side-wall face resolved both failures; its targeted rerun passed with zero problems. Thus all 47 current recorded subjects have passing audit evidence. The production build retains the full audit so future failures stop publication.
