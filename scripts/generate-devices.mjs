@@ -1,3 +1,4 @@
+import {engineeringGeometry} from './engineering-geometry.mjs';
 import {writeFileSync,mkdirSync} from 'node:fs';
 import * as k from '../vendor/anatomy/iso-kit.mjs';
 import * as G from '../vendor/anatomy/lathe.mjs';
@@ -8,10 +9,10 @@ mkdirSync('public/art',{recursive:true});
 const view=Number(process.env.ANATOMY_VIEW||0);const viewSuffix=view?'-'+view:'';
 function machine(id,bounds,azimuth=38,elevation=28){
  const P=k.fitProjection(bounds,560,560,{pad:48,azimuth:azimuth+view*45,elevation});
- const inks=[];const groups=[],R=A.recorder(P,{ground:shape=>A.boundsOf(shape).min[2]<=.05});let group,scope=null,lastItem=null;
+ const inks=[];const groups=[],R=A.recorder(P,{ground:shape=>A.boundsOf(shape).min[2]<=.05});let group,scope=null,lastItem=null,activeMotion=null,enriched=false;
  const begin=(id,move=[0,0,0])=>{group={id,move,lift:k.translateAlong(P,move),svg:'',shapes:[]};groups.push(group);};
  const append=svg=>{if(scope)svg=`<g data-component="${scope.id}" data-stage="${scope.stage}">${svg}</g>`;group.svg+=svg;if(lastItem)lastItem.svg+=svg;};
- const add=(paths,shape,tone='hi',lit=false)=>{const solid=R.solid({...shape,name:R.nameFor(group.id),owner:group.id,render:{tone,lit,component:scope?.id,stage:scope?.stage}});const raw=k.solidSvg(paths,{tone,lit});const svg=scope?`<g data-component="${scope.id}" data-stage="${scope.stage}">${raw}</g>`:raw;group.svg+=svg;group.shapes.push(solid);const b=A.boundsOf(solid);lastItem=R.put({name:solid.name,piece:group.id,at:b.min.map((v,i)=>(v+b.max[i])/2),svg,shapes:[solid],move:group.move});};
+ const add=(paths,shape,tone='hi',lit=false)=>{const solid=R.solid({...shape,name:R.nameFor(group.id),owner:group.id,render:{tone,lit,component:scope?.id,stage:scope?.stage,motion:activeMotion}});const raw=k.solidSvg(paths,{tone,lit});let svg=scope?`<g data-component="${scope.id}" data-stage="${scope.stage}">${raw}</g>`:raw;if(activeMotion){const p=k.iso(activeMotion.pivot,P),u=G.frameAlong(activeMotion.pivot,activeMotion.axis),a=k.iso(G.add3(activeMotion.pivot,u.u),P),b=k.iso(G.add3(activeMotion.pivot,u.v),P);svg=`<g data-spin="${[a[0]-p[0],a[1]-p[1],b[0]-p[0],b[1]-p[1],p[0],p[1]].join(',')}" data-ratio="${activeMotion.ratio}">${svg}</g>`;}group.svg+=svg;group.shapes.push(solid);const b=A.boundsOf(solid);lastItem=R.put({name:solid.name,piece:group.id,at:b.min.map((v,i)=>(v+b.max[i])/2),svg,shapes:[solid],move:group.move});};
  const plate=(poly,z,h,tone='hi')=>add(k.extrude(poly,z,h,P,{convex:false}),A.extruded(poly,z,h),tone);
  const slab=(x,y,w,d,z,h=3,tone='hi',r=2)=>add(k.slabOf({x,y,w,d,r},z,h,P,6,.5),A.slab({x,y,w,d,r},z,h,{},6),tone);
  const round=(F,s0,s1,r,tone='hi',inner=0)=>add(inner?G.ringBand(s0,s1,inner,r,F,P,{fill:'facets'}):G.disc(s0,s1,r,F,P),inner?A.ring(F,s0,s1,inner,r):A.disc(F,s0,s1,r),tone);
@@ -20,10 +21,12 @@ function machine(id,bounds,azimuth=38,elevation=28){
  const beam=(a,b,w=4,tone='mid')=>{const F=G.frameAlong(a,G.unit3(G.sub3(b,a))),len=G.len3(G.sub3(b,a)),poly=[[-w/2,-w/2],[w/2,-w/2],[w/2,w/2],[-w/2,w/2]];add(G.prismOf(F,poly,0,len,P),A.prism(F,poly,0,len),tone);};
  const ring=(F,s,r,tone='mid')=>{inks.push({kind:'circle',F,s,r,tone,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});const point=G.pointOf(F,s,r,0);const candidates=R.items.filter(i=>i.piece===group.id);const target=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,point))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,point)))))[0];const previous=lastItem;lastItem=target||lastItem;append(k.lineSvg(G.circleOf(F,s,r,P),{tone}));lastItem=previous;};
  const screw=(x,y,z,tone='lo',size=.8)=>{const previous=lastItem;const candidates=R.items.filter(i=>i.piece===group.id);lastItem=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z]))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z])))))[0]||lastItem;inks.push({kind:'dot',point:[x,y,z],tone,size,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});append(k.dotsSvg([k.iso([x,y,z],P)],{size,tone}));lastItem=previous;};
+ const motion=(spec,fn)=>{const before=activeMotion;activeMotion=spec;fn();activeMotion=before;};
  const detail=(id,stage,fn)=>{scope={id,stage};fn();scope=null;};
  const text=(x,y,z,value,size=7)=>{inks.push({kind:'text',point:[x,y,z],text:value,size,part:group.id,move:group.move});append(k.faceTextSvg(k.topMatrix([x,y],z,P),value,{size,tone:'mid',anchor:'middle'}));};
  const finish=()=>{
   if(process.env.ANATOMY_DEVICE&&process.env.ANATOMY_DEVICE!==id)return;
+  if(!enriched){enriched=true;engineeringGeometry(id,{begin,detail,slab,post,round,beam,screw,ring,motion});}
   if(!view)writeFileSync(`public/art/${id}-model.json`,JSON.stringify({azimuth,elevation,bounds,inks,parts:R.solids.map(s=>({kind:s.kind,F:s.F,poly:s.poly,s0:s.s0,s1:s.s1,move:s.move,part:s.owner,name:s.name,...s.render}))}));
   for(let pass=0;pass<6;pass++){
    const settled=A.settle(R,P,{states:[0,.5,1],step:process.argv.includes('--audit')?.5:(view?2:1)});const items=R.items;const parent=items.map((_,i)=>i);const find=i=>parent[i]===i?i:(parent[i]=find(parent[i]));let changed=false;
@@ -38,7 +41,7 @@ function machine(id,bounds,azimuth=38,elevation=28){
   if(!view)for(const opened of [false,true])writeFileSync(`public/art/${id}${opened?'-open':''}.svg`,k.figureSvg({width:560,height:560,label:`Illustrative ${id} anatomy`,body:drawing.map(g=>`<g ${opened?`transform="${g.lift}"`:''}>${g.svg}</g>`).join(''),standalone:'light'}).replace('<svg ', '<svg style="--anatomy-paper:#e3e6dc;--anatomy-top:#c8d3bc;--anatomy-shade-0:#6c816c;--anatomy-shade-1:#869780;--anatomy-shade-2:#a1b098;--anatomy-shade-3:#b9c5ad;--anatomy-hi:#405842;--anatomy-mid:#6b7e66;--anatomy-lo:#95a48b;--anatomy-faint:#aab6a0" '));
   console.log(`${id}: ${groups.length} assemblies, ${R.solids.length} supported solids`);
  };
- return {P,begin,plate,collarWall,slab,round,post,beam,ring,screw,detail,text,finish};
+ return {P,begin,plate,collarWall,slab,round,post,beam,ring,screw,detail,motion,text,finish};
 }
 {
  const m=machine('controller',k.boxCorners({x:-100,y:-50,w:200,d:140},0,125));const {begin,slab,post,detail,screw,text}=m;
@@ -69,7 +72,7 @@ function machine(id,bounds,azimuth=38,elevation=28){
  const m=machine('car',k.boxCorners({x:-90,y:-140,w:180,d:280},0,210),35,22);const {begin,slab,round,detail,screw,text}=m;
  begin('chassis');for(const x of [-67,67])for(const y of [-87,87]){const F=G.frameAlong([x,y,25],[1,0,0]);round(F,-10,10,25,'lo');round(F,x<0?-10:10,x<0?-9.6:10.4,16,'mid');}slab(-55,-116,110,232,22,6,'mid',7);for(const x of [-46,46]){slab(x-3,-105,6,210,28,5,'mid');for(const y of [-99,99])screw(x,y,33);}for(const y of [-87,87])slab(-60,y-3,120,6,25,3,'mid');
  begin('pack',[0,0,35]);slab(-42,-48,84,116,28,4,'mid',4);for(let y=0;y<6;y++)for(let x=0;x<4;x++)slab(-38+x*19,-43+y*17,16,14,32,4,'hi');detail('bms','systems',()=>slab(-37,60,40,6,32,3,'mid'));detail('busbars','engineering',()=>{for(let i=0;i<4;i++)slab(-35+i*19,-44,2,100,36,.7,'mid',.2);});
- begin('drive',[0,0,67]);slab(-25,79,50,24,28,6,'mid');slab(-20,80,40,22,34,16,'hi',5);detail('rotor','systems',()=>slab(-16,84,32,14,50,2,'mid'));slab(-12,73,24,6,34,9,'mid');
+ begin('drive',[0,0,67]);slab(-25,79,50,24,28,6,'mid');slab(-20,80,40,22,34,3,'hi',3);slab(-20,99,40,3,37,13,'mid');for(const x of [-20,17])slab(x,80,3,19,37,13,'mid');detail('rotor','systems',()=>m.motion({pivot:[0,91,43.5],axis:[1,0,0],ratio:1},()=>m.round(G.frameAlong([0,91,43.5],[1,0,0]),-18,18,2,'hi')));slab(-12,73,24,6,34,9,'mid');
  begin('electronics',[0,0,98]);slab(-36,-92,72,33,28,12,'hi',4);for(let i=0;i<12;i++)slab(-33+i*5,-89,2,27,40,4,'mid',.3);detail('switches','engineering',()=>slab(-31,-87,25,23,44,.8,'hi'));slab(14,-110,22,14,28,9,'mid');
  begin('body',[0,0,119]);for(const x of [-54,44])for(const y of [-86,81])slab(x,y,10,6,33,15,'mid');slab(-49,-86,98,154,48,4,'hi',3);slab(-55,-125,110,38,48,4,'hi',10);slab(-55,104,110,21,48,4,'hi',10);for(const x of [-55,49])slab(x,-100,6,225,48,4,'hi',2);for(const x of [-48,43])for(const y of [-66,49])slab(x,y,5,8,52,30,'mid');slab(-47,-66,94,123,82,4,'hi',8);slab(-45,-63,90,18,69,1,'lo');slab(-45,42,90,15,69,1,'lo');for(const x of [-34,21])for(const y of [-35,10]){slab(x,y,13,25,52,8,'mid',3);slab(x,y+20,13,5,60,15,'mid',2);}for(const x of [-41,24])slab(x,-124,17,5,50,2,'hi',2);text(0,-101,52.2,'EV',8);m.finish();
 }
@@ -89,8 +92,8 @@ function machine(id,bounds,azimuth=38,elevation=28){
  begin('frame');for(const x of [-78,78])for(const y of [-78,78]){post(x,y,0,8,8,'lo');beam([0,0,10],[x,y,10],4,'mid');slab(x-10,y-20,20,30,8,4,'mid',4);screw(x+7,y+7,12);}slab(-30,-30,60,60,8,4,'mid',8);for(const x of [-22,22])for(const y of [-22,22]){post(x,y,12,9,2,'mid');screw(x,y,21);}
  begin('battery',[0,0,25]);slab(-18,4,36,22,12,7,'hi',3);slab(-12,4,4,22,19,1,'lo',0);slab(8,4,4,22,19,1,'lo',0);
  begin('controller',[0,0,51]);slab(-27,-27,54,25,21,2,'mid',2);slab(-8,-23,16,15,23,3,'hi');detail('imu','systems',()=>slab(14,-23,7,7,23,2,'hi',1));detail('mixer','engineering',()=>slab(-7,-22,14,13,26,.3,'hi'));for(let i=0;i<6;i++)slab(-24+i*7,-7,3,3,23,1,'hi',.4);
- begin('motors',[0,0,78]);for(const x of [-78,78])for(const y of [-78,78]){post(x,y,12,16,8,'mid');post(x,y,28,2,3,'hi');slab(x-9,y-20,18,8,12,2,'mid');detail('esc','systems',()=>slab(x-6,y-19,12,6,14,2,'hi'));m.ring(G.frameAlong([x,y,28],[0,0,1]),0,6);}
- begin('rotors',[0,0,117]);for(const x of [-78,78])for(const y of [-78,78]){m.plate([[x-32,y-4],[x-4,y-3],[x+30,y-6],[x+32,y],[x+4,y+3],[x-30,y+6]],30,1.5,'hi');detail('hub','engineering',()=>post(x,y,31.5,1.5,3,'mid'));}m.finish();
+ begin('motors',[0,0,78]);for(const x of [-78,78])for(const y of [-78,78]){post(x,y,12,2,8,'mid');post(x,y,14,16,1.5,'hi');const shell=[];for(let i=0;i<=16;i++){const a=i*Math.PI/16;shell.push([x+Math.cos(a)*8,y+Math.sin(a)*8]);}for(let i=16;i>=0;i--){const a=i*Math.PI/16;shell.push([x+Math.cos(a)*7,y+Math.sin(a)*7]);}m.plate(shell,14,13,'mid');m.motion({pivot:[x,y,21],axis:[0,0,1],ratio:x*y>0?1:-1},()=>m.round(G.frameAlong([x,y,27],[0,0,1]),0,1,8,'mid',6));post(x,y,28,2,3,'hi');slab(x-9,y-20,18,8,12,2,'mid');detail('esc','systems',()=>slab(x-6,y-19,12,6,14,2,'hi'));m.ring(G.frameAlong([x,y,28],[0,0,1]),0,6);}
+ begin('rotors',[0,0,117]);for(const x of [-78,78])for(const y of [-78,78]){m.motion({pivot:[x,y,30],axis:[0,0,1],ratio:x*y>0?1:-1},()=>m.plate([[x-32,y-4],[x-4,y-3],[x+30,y-6],[x+32,y],[x+4,y+3],[x-30,y+6]],30,1.5,'hi'));detail('hub','engineering',()=>post(x,y,31.5,1.5,3,'mid'));}m.finish();
 }
 {
  const m=machine('arduino-rover',k.boxCorners({x:-70,y:-72,w:140,d:144},0,133),38,25);const {begin,slab,post,round,detail,screw,text}=m;

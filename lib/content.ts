@@ -4,6 +4,9 @@ export type Lesson = { name: string; role: string; simple: string; deep: string;
 export const languages: Record<Lang,string> = {en:'English',fr:'Français',pt:'Português',ar:'العربية'};
 export const order: PartId[] = ['display','chip','camera','battery','frame'];
 export const sources = [
+ {id:"phonepower",name:"Texas Instruments",title:"Smartphone power, audio and haptic design resources",url:"https://www.ti.com/solution/smartphone?subsystemid=23046&variantid=23044",topic:"Power and electromechanical interfaces"},
+ {id:"rf",name:"Qorvo",title:"RF front-end and filter technology",url:"https://www.qorvo.com/-/media/files/qorvopublic/ebooks/qorvo-rf-filter-technology-for-dummies-qorvo-2nd-special-edition.pdf",topic:"Radio front-end engineering"},
+ {id:"flash",name:"Micron",title:"NAND flash storage",url:"https://www.micron.com/products/storage/nand-flash",topic:"Nonvolatile storage"},
  {id:'doe',name:'US Department of Energy',title:'DOE Explains… Batteries',url:'https://www.energy.gov/science/doe-explainsbatteries',topic:'Battery operation'},
  {id:'nobel',name:'NobelPrize.org',title:'The 2019 Chemistry Prize',url:'https://www.nobelprize.org/uploads/2019/10/popular-chemistryprize2019.pdf',topic:'Lithium-ion battery contributors'},
  {id:'chm',name:'Computer History Museum',title:'The integrated circuit',url:'https://www.computerhistory.org/revolution/story/276',topic:'Kilby, Noyce and integrated circuits'},
@@ -14,6 +17,7 @@ export const sources = [
  {id:'ifixit',name:'iFixit',title:'Google Pixel 8 repair guides',url:'https://www.ifixit.com/Device/Google_Pixel_8',topic:'Physical parts and assembly'},
 ];
 export const sourceIds:Record<PartId,string[]>={display:['display','cern'],chip:['chm','intel'],camera:['sony'],battery:['doe','nobel'],frame:['ifixit']};
+export const phoneDetailRefs:Record<string,string[]>={pmic:['phonepower'],rf:['rf'],flash:['flash'],connector:['ifixit'],speaker:['phonepower'],haptic:['phonepower'],lens:['sony'],touch:['cern'],memory:['flash','intel'],sensor:['sony'],pixels:['display'],transistors:['intel','chm'],separator:['doe','nobel']};
 export const lessons: Record<Lang,Record<PartId,Lesson>> = {
  en: {
   display:{name:'Display & touch layer',role:'Your window into the digital world',simple:'The display makes pictures using tiny light-emitting pixels. A separate touch layer detects where your finger touches the glass.',deep:'In an OLED display, organic layers emit light when an electric current passes through them. A capacitive touch sensor detects changes in an electric field. The display and touch sensor do different jobs.',made:'A display is built from thin layers on a supporting surface. It is combined with a touch sensor and protective glass, then connected to the circuit board.',story:'In 1973, Bent Stumpe and Frank Beck developed a capacitive touchscreen at CERN for accelerator controls. This was one contribution to a much wider history of touch technology—not the invention of every modern phone screen.',question:'Which part detects your finger?',options:['The light-emitting pixels','The touch sensor','The battery'],correct:1,answer:'The touch sensor detects your finger. The pixels make the image you see.'},

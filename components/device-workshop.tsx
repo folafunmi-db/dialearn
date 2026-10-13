@@ -10,6 +10,7 @@ import {Slider} from './ui/slider';
 import {ChoiceSelect} from './choice-select';
 import {Icon} from './icons';
 import {AnatomyTooltip,elementAnchor,type Anchor} from './anatomy-tooltip';
+import {EngineeringGuide} from './engineering-guide';
 import {ProjectGuide} from './project-guide';
 import {Explore3D} from './explore-3d';
 import {SelectionPrompt,selectionCopy} from './selection-prompt';
@@ -50,5 +51,5 @@ export function DeviceWorkshop({id,lang,stage,onStage,textOnly,still,saved,onSav
  {tab==='works'?<fieldset className="challenge" lang="en" dir="ltr"><legend>{c.question}</legend><p>{device.question}</p>{device.options.map((option,i)=><label key={option} className={choice===i?'chosen':''}><input type="radio" name={`prediction-${id}`} checked={choice===i} onChange={()=>{setChoice(i);setChecked(false);}}/>{option}</label>)}<Button variant="ghost" className="secondary small" disabled={choice===null} onClick={()=>setChecked(true)}>{t.check}</Button>{checked?<p className={`answer ${choice===device.correct?'right':''}`} role="status"><strong>{choice===device.correct?t.correct:t.thinkAgain}</strong> {device.answer}</p>:null}</fieldset>:null}
  {tab!=='story'?<Button variant="ghost" className="story-link" onClick={()=>setTab('story')}><Icon name="book" size={17}/>{t.storyLink}<Icon name="arrow" size={16}/></Button>:null}
  <div className="lesson-sources"><h4>{t.sourceDetail}</h4>{deviceSources.filter(s=>lesson.refs.includes(s.id)).map(s=><a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer"><span>{s.name} · {s.title}</span><Icon name="outward" size={13}/></a>)}<p>{t.sourceDate}</p></div>
- </>:<SelectionPrompt lang={lang}/>}</div></div><ProjectGuide id={id} stage={stage} lang={lang}/></>;
+ </>:<SelectionPrompt lang={lang}/>}</div></div><EngineeringGuide id={id} selected={selected} stage={stage} lang={lang} onSelect={pick} available={available.map(p=>p.id)}/><ProjectGuide id={id} stage={stage} lang={lang}/></>;
 }

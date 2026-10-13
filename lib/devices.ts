@@ -1,3 +1,4 @@
+import {engineeringParts,engineeringSources} from './deep-parts';
 import {circuitDevices,circuitSources} from './circuit-devices';
 import {makerDevices,makerSources} from './maker-devices';
 import type {Lang} from './content';
@@ -7,7 +8,7 @@ type Translation=Record<Lang,string>;
 const tr=(en:string,fr:string,pt:string,ar:string):Translation=>({en,fr,pt,ar});
 export type DevicePart={id:string;stage:Stage;name:Translation;simple:Translation;deep:string;engineering:string;made:string;story:string;refs:string[]};
 export type Device={id:DeviceId;name:Translation;description:Translation;category:'devices'|'energy'|'electronics';parts:DevicePart[];question:string;options:string[];correct:number;answer:string};
-export const deviceSources=[...makerSources,...circuitSources,
+export const deviceSources=[...engineeringSources,...makerSources,...circuitSources,
  {id:'gamepad',name:'Microsoft Learn',title:'Gamepad inputs and vibration',url:'https://learn.microsoft.com/en-us/windows/uwp/gaming/gamepad-and-vibration'},
  {id:'xbox',name:'Xbox engineering team',title:'The new generation Xbox controller',url:'https://news.xbox.com/en-us/2013/06/06/xbox-one-controller-feature/'},
  {id:'nintendo',name:'Nintendo',title:'Switch technical specifications',url:'https://www.nintendo.com/us/gaming-systems/switch/tech-specs/'},
@@ -86,6 +87,7 @@ export const devices:Device[]=[...makerDevices,...circuitDevices,
  p('friction',tr('Brake contact','Contact du frein','Contato do freio','تلامس المكابح'),tr('Friction at the brake contact resists wheel motion.','Le frottement du frein résiste au mouvement.','O atrito no contato do freio resiste ao movimento.','يقاوم الاحتكاك عند المكابح حركة العجلة.'),'Braking performance depends on contact force, materials, water, tyre grip and weight transfer. This diagram does not predict stopping distance.','Pads are made from selected friction materials and aligned with the braking surface.',bikeHistory,['bikes','gears'],'engineering'),
  ]},
 ];
+for(const device of devices)device.parts.push(...(engineeringParts[device.id]||[]));
 export const deviceCopy={
  en:{model:'Illustrative anatomy. Assemblies separate along mounting directions; geometry and internal arrangements are simplified. Not a repair guide.',reference:'Advanced explanations and history are currently available in English. Basic descriptions are translated; classroom translations need review.',parts:'parts to explore',connections:'What connects these ideas?',history:'Meet the contributors',question:'Try a prediction',ratio:'Explore gear ratio',front:'Front chainring teeth',rear:'Rear sprocket teeth',turns:'wheel turns per pedal turn'},
  fr:{model:'Anatomie illustrative. Les assemblages suivent leur direction de montage ; la géométrie est simplifiée. Ce n’est pas un guide de réparation.',reference:'Les explications avancées et l’histoire sont disponibles en anglais. Les descriptions de base sont traduites ; révision nécessaire pour la classe.',parts:'pièces à explorer',connections:'Quels liens entre ces idées ?',history:'Découvrez les contributeurs',question:'Faites une prédiction',ratio:'Explorez le rapport',front:'Dents du plateau avant',rear:'Dents du pignon arrière',turns:'tours de roue par tour de pédale'},
