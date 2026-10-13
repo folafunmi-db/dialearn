@@ -9,7 +9,7 @@ Dialearn retains its own twelve subjects: phone, controller, handheld console, e
 - Twelve engineering notebooks: operating principles, manufacturing, design trade-offs, fault diagnosis, equations and primary/reference links. All ages can read them; Engineering initially expands the detailed sections.
 - Twelve bounded teaching experiments with explicit assumptions. These are simplified calculations, not validated hardware or flight simulators.
 - New guide text is English. Interface and component names support English, French, Portuguese and Arabic. Translation drafts are labelled in the existing learning flow.
-- Notebook content has 30 px desktop and 20 px mobile gutters; divider borders span the containing section. The explore age-status strip was removed. Selection menus retain green fills and checkmarks without an inset stripe. Switch thumbs use one position rule with no competing Tailwind translation.
+- Notebook content has 30 px desktop and 20 px mobile gutters; divider borders span the containing section. The explore age-status strip was removed. Changing the general age clears the page’s old URL override; modal age choices remain local. Selection menus retain green fills and checkmarks without an inset stripe. Switch thumbs use one position rule with no competing Tailwind translation.
 
 ## Verification performed
 
