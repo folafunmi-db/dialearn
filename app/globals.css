@@ -478,3 +478,9 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 .diy-build-copy .diy-kit-summary{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;line-height:1.7;font-size:12px}
 .diy-kit-summary strong{color:var(--ink);font-weight:550}
 .workshop-model > .source-notice{margin-top:16px}
+
+/* Assembly framing changes inside the viewport, never the document layout. */
+.workshop-model .device-stage{padding:0}
+.workshop-model .device-stage .anatomy-art{height:clamp(320px,48vh,460px);padding:42px 12px 8px;overflow:hidden}
+.workshop-model .device-stage .anatomy-art > .iso-svg{display:block;width:100%;height:100%;max-height:none;overflow:hidden}
+@media(max-width:720px){.workshop-model .device-stage .anatomy-art{height:clamp(260px,75vw,340px);padding:34px 8px 4px}}
