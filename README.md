@@ -87,3 +87,7 @@ Object explorations start with no part selected unless opened through an explici
 Page backgrounds and section dividers span the viewport. Content stays centered with a 1190px maximum width and responsive gutters; mobile object pages use the available width.
 
 The 3D canvas fills the workspace beneath its header. Rotation, zoom and part selection use floating controls; additional angle sliders are available under Adjust view. Selected-part descriptions float above the canvas and disappear when the selection is cleared.
+
+## Project publishers and subscriptions
+
+Current projects are published by the **Dialearn team**, with separate credit to the original inventors and source authors. Learners can choose updates from all projects, a particular educator, or a project category (including DIY). Educators can propose subsequent projects for review and publisher credit. These subscription/proposal flows are prototypes: no email is sent or subscription saved without the receiving endpoints described in `docs/community-setup.md`.

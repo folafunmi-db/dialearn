@@ -1,4 +1,5 @@
 'use client';
+import {ProjectCredit} from './project-credit';
 import {advancedLearningNotice} from '@/lib/advanced-learning-notice';
 import {useEffect,useRef,useState,type ReactNode} from 'react';
 import {devices,deviceCopy,deviceSources,type DeviceId} from '@/lib/devices';
@@ -39,7 +40,7 @@ export function DeviceWorkshop({id,lang,stage,onStage,textOnly,still,saved,onSav
  function target(node:EventTarget|null){const el=node as Element;const inner=el?.closest?.('[data-component]')?.getAttribute('data-component');if(inner&&available.some(p=>p.id===inner))return inner;return el?.closest?.('[data-assembly]')?.getAttribute('data-assembly')||null;}
  const previewPart=device.parts.find(p=>p.id===preview);
  return <>
- <div className="workshop-heading"><div><h1>{device.name[lang]}</h1><p>{device.description[lang]}</p></div><div className="workshop-header-controls">{headingAction}<div className="depth-switch" role="group" aria-label={t.depth}>{[false,true].map(v=><Button key={String(v)} variant="ghost" aria-pressed={deep===v} className={deep===v?'active':''} onClick={()=>setDeep(v)}>{v?t.deep:t.quick}</Button>)}</div></div></div>
+ <div className="workshop-heading"><div><h1>{device.name[lang]}</h1><p>{device.description[lang]}</p><ProjectCredit id={id} lang={lang} linked/></div><div className="workshop-header-controls">{headingAction}<div className="depth-switch" role="group" aria-label={t.depth}>{[false,true].map(v=><Button key={String(v)} variant="ghost" aria-pressed={deep===v} className={deep===v?'active':''} onClick={()=>setDeep(v)}>{v?t.deep:t.quick}</Button>)}</div></div></div>
  <div className="mobile-part-picker"><label htmlFor="device-part">{t.choosePart}</label><ChoiceSelect id="device-part" label={t.choosePart} value={selected||null} onChange={pick} options={available.map(p=>({value:p.id,label:p.name[lang]}))}/></div>
  <div className="workshop-grid"><div className="workshop-model">
  {textOnly?<div className="text-model"><Icon name="layers" size={40}/><p>{t.choosePart}</p></div>:<div className="model-illustration">
