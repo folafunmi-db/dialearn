@@ -1,0 +1,13 @@
+'use client';
+import {languages,type Lang} from '@/lib/content';
+import {ui} from '@/lib/i18n';
+import {diyCopy} from '@/lib/diy-resources';
+import {Mark,Icon} from './icons';
+import {Button} from './ui/button';
+import {ChoiceSelect} from './choice-select';
+export function SiteHeader({lang,theme,active,onLanguage,onTheme,onSettings}:{lang:Lang;theme:'light'|'dark';active:'explore'|'diy'|'community';onLanguage:(lang:Lang)=>void;onTheme:()=>void;onSettings:()=>void}){
+ const t=ui[lang],themeLabel=({en:theme==='dark'?'Switch to light mode':'Switch to dark mode',fr:theme==='dark'?'Passer au mode clair':'Passer au mode sombre',pt:theme==='dark'?'Usar modo claro':'Usar modo escuro',ar:theme==='dark'?'التبديل إلى الوضع الفاتح':'التبديل إلى الوضع الداكن'})[lang];
+ const links=[{id:'explore',href:'/',label:t.explore,icon:'layers' as const},{id:'diy',href:'/diy/',label:diyCopy[lang].nav,icon:'chip' as const},{id:'community',href:'/community/',label:({en:'Community',fr:'Communauté',pt:'Comunidade',ar:'المجتمع'})[lang],icon:'book' as const}];
+ const themeControl=(className:string)=><Button variant="ghost" className={`icon-button ${className}`} aria-label={themeLabel} title={themeLabel} onClick={onTheme}><Icon name={theme==='dark'?'sun':'moon'} size={19}/></Button>;
+ return <><div className="site-header-band is-dedicated"><header className="header dedicated-header"><a href="/" className="brand" aria-label="Dialearn home"><Mark/><span>dialearn<span className="brand-dot">.</span></span></a><nav aria-label={t.explore}>{links.map(link=><a key={link.id} href={link.href} aria-current={active===link.id?'page':undefined} className={active===link.id?'nav-active':undefined}>{link.label}</a>)}</nav><div className="header-tools"><label className="language"><Icon name="globe" size={17}/><ChoiceSelect label={t.language} value={lang} onChange={value=>onLanguage(value as Lang)} options={Object.entries(languages).map(([value,label])=>({value,label}))}/></label>{themeControl('desktop-theme-toggle')}<span className="header-rule"/><Button variant="ghost" className="icon-button" aria-label={t.settings} onClick={onSettings}><Icon name="tune"/></Button></div></header></div><nav className="mobile-section-nav" aria-label={t.explore}>{links.map(link=><a key={link.id} href={link.href} aria-current={active===link.id?'page':undefined}><Icon name={link.icon} size={17}/>{link.label}</a>)}{themeControl('mobile-theme-toggle')}</nav></>;
+}

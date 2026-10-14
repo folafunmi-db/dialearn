@@ -1,5 +1,7 @@
-export type MechanismMotion={pivot:[number,number,number];axis:[number,number,number];ratio:number;mode?:'rotate'|'oscillate'|'piston'|'rod';amplitude?:number;radius?:number;rodLength?:number};
+export type MechanismMotion={pivot:[number,number,number];axis:[number,number,number];ratio:number;mode?:'rotate'|'oscillate'|'piston'|'rod'|'vibrate'|'loop';path?:[number,number,number][];pathPhase?:number;pathAngles?:number[];restAngle?:number;amplitude?:number;radius?:number;rodLength?:number};
 export function mechanismPose(m:MechanismMotion,phase:number){const theta=phase*m.ratio,offset:[number,number,number]=[0,0,0];let angle=theta;
+ if(m.mode==='vibrate'){angle=0;for(let i=0;i<3;i++)offset[i]=m.axis[i]*Math.sin(theta)*(m.amplitude||.15);}
+ if(m.mode==='loop'&&m.path?.length){angle=0;const path=m.path,lengths=path.map((p,i)=>Math.hypot(...p.map((v,j)=>path[(i+1)%path.length][j]-v))),total=lengths.reduce((a,b)=>a+b,0);let distance=(((theta/(2*Math.PI)+(m.pathPhase||0))%1+1)%1)*total;for(let i=0;i<path.length;i++){if(distance<=lengths[i]){const t=distance/lengths[i];if(m.pathAngles){const a=m.pathAngles[i],b=i===path.length-1?-2*Math.PI:m.pathAngles[(i+1)%path.length];angle=a+(b-a)*t-(m.restAngle||0);}for(let j=0;j<3;j++)offset[j]=path[i][j]+(path[(i+1)%path.length][j]-path[i][j])*t-m.pivot[j];break;}distance-=lengths[i];}}
  if(m.mode==='oscillate')angle=Math.sin(theta)*(m.amplitude||1);
  if(m.mode==='piston'||m.mode==='rod'){const r=m.radius||10,L=m.rodLength||38;const x=r*Math.sin(theta);if(m.mode==='piston'){angle=0;offset[2]=r*Math.cos(theta)+Math.sqrt(Math.max(0,L*L-x*x))-r-L;}else{offset[0]=x;offset[2]=r*(Math.cos(theta)-1);angle=Math.asin(-x/L);}}
  return {offset,angle};}

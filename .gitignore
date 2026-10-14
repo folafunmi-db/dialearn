@@ -13,3 +13,5 @@ shots/
 .openai/
 .vercel/
 .vercel
+
+/drafts/

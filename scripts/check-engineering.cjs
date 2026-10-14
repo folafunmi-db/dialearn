@@ -26,8 +26,10 @@ try {
  for(const d of devices.filter(d=>d.complex)){const model=JSON.parse(fs.readFileSync(`public/art/${d.id}-model.json`));assert.equal(new Set(model.parts.map(p=>p.component).filter(Boolean)).size,d.parts.length,d.id+' must depict every named component');if(d.hasMotion)assert(model.parts.some(p=>p.motion),d.id+' missing mechanism motion');}
  const {geometryBatchKey}=require(path.join(dir,'anatomy-batches.cjs'));
  const sample={part:'fan',component:'fan',stage:'engineering',move:[0,0,0],motion:{pivot:[0,0,10],axis:[0,0,1],ratio:1}};
- for(const changed of [{...sample,part:'shaft'},{...sample,stage:'foundations'},{...sample,move:[0,0,20]},{...sample,motion:{...sample.motion,pivot:[20,0,10]}}])assert.notEqual(geometryBatchKey(sample,0),geometryBatchKey(changed,0),'Batching must preserve independent selection, visibility and movement');
+ for(const changed of [{...sample,component:'shaft'},{...sample,stage:'foundations'},{...sample,move:[0,0,20]},{...sample,motion:{...sample.motion,pivot:[20,0,10]}}])assert.notEqual(geometryBatchKey(sample,0),geometryBatchKey(changed,0),'Batching must preserve independent selection, visibility and movement');
+ assert.equal(geometryBatchKey(sample,0),geometryBatchKey({...sample,part:'hardware-fan-2'},0),'Pieces of the same selectable assembly may batch together');
+ assert.notEqual(geometryBatchKey(sample,0),geometryBatchKey({...sample,inspectionOffset:[20,0,0]},0),'Independent cover movement must remain distinct');
  assert.notEqual(geometryBatchKey(sample,0),geometryBatchKey(sample,1),'Different materials must stay distinct');
  const jet=JSON.parse(fs.readFileSync('public/art/turbofan-model.json'));assert(new Set(jet.parts.map(p=>geometryBatchKey(p,0))).size<80,'Dense turbine must batch into assembly meshes');
- console.log('Validated all 48 guides, trace paths, references, component IDs, motion axes and teaching-model boundary values.');
+ console.log(`Validated all ${Object.keys(engineeringGuides).length} guides, trace paths, references, component IDs, motion axes and teaching-model boundary values.`);
 }finally{fs.rmSync(dir,{recursive:true,force:true});}

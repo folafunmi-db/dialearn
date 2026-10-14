@@ -1,23 +1,24 @@
-# Learning community setup
+# Project updates and educator proposals
 
-The public anatomy library remains a static, offline-capable Next.js export. The optional `/community/` uses Supabase Auth, Postgres with row-level security, and a private image bucket. Without configuration the page clearly states that sign-in is unavailable; it never simulates an account, subscription, or published lesson.
+The `/community/` page no longer signs learners or educators in. It contains an email subscription form and a separate educator proposal form. Neither flow loads Supabase Auth or creates an account. Existing account data and the legacy migration have not been deleted.
 
-1. Create or choose a Supabase project. Apply `supabase/migrations/202610130001_community.sql` in the project's SQL editor or migration CLI.
-2. Configure the Auth site URL as `https://dialearn-two.vercel.app`. Allow `/community/` on that origin and `http://127.0.0.1:3108/community/` as development redirect URLs. Enable email OTP/magic links, verified email, suitable email rate limits, and production SMTP. The sign-in screen accepts a link or email token.
-3. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in local and Vercel build environments. Both are public browser configuration. **Never use a service-role or secret key in either variable.** Rebuild after setting them.
-4. Give reviewed educators access through an administrator-controlled SQL command: `update public.profiles set role = 'educator' where id = '<approved-account-uuid>';`. Learners can request access but cannot update their role. Designate a trusted moderator similarly with `role = 'moderator'`.
-5. Assign real educators to review pending questions and reports. The learner-facing editor and database both treat discussion submissions as pending. Only the lesson owner or a moderator can approve/hide them.
-6. Exercise the real sign-in email, educator draft/publish, learner subscription, automatic notification, schematic upload/download, reflection, moderation and deletion flows with two different test accounts before enabling public enrolment.
+## Connect delivery
 
-## Behaviour
+Configure these public HTTPS endpoint URLs in the local and Vercel build environments, then rebuild:
 
-- Educators publish sourced text lessons with a complete text schematic description and optional PNG/JPEG/WebP up to 5 MB. Source URLs must be HTTPS. Active SVG and arbitrary HTML are not accepted. React renders authored prose as text.
-- Current subscribers receive a personal in-app notification on first publication. Republishing does not create duplicate notifications. Email delivery of **lesson updates** is not implemented; auth emails are a separate channel.
-- Learners can save a lesson, mark it explored, and store a private reflection. There are no public scores, leaderboards, exact-age fields or direct messages.
-- Approved discussion posts are shared with authenticated learners. Authors can see their own pending posts; lesson owners/moderators can review them. Posting is limited to one entry per 30 seconds at the database layer.
-- Images load only when requested and use expiring signed links. Community records and signed images are never included in the public offline pack or cached by its service worker.
-- Emails remain in Auth and are not published in profiles. Account deletion removes dependent rows; uploads are removed first. This does not erase the separate public-exploration notebook in the browser.
+- `NEXT_PUBLIC_PROJECT_SUBSCRIPTION_ENDPOINT`
+- `NEXT_PUBLIC_PROJECT_PROPOSAL_ENDPOINT`
 
-## Verification limits
+These must be dedicated server endpoints, not email-service API URLs requiring a private key. Keep provider credentials server-side. No delivery service or receiving endpoint is currently configured by this change.
 
-The migration and browser code can be validated locally without a project. Real email delivery, storage policies in the hosted project, and cross-account end-to-end behaviour require the project's URL, public key and applied migration. Do not describe an unconfigured deployment as accepting accounts.
+The subscription endpoint accepts JSON `{email, consent: true, locale, website: ""}`. Validate email and affirmative consent on the server, rate-limit requests, and send a confirmation email. Return HTTP 200/202 and `{ "status": "confirmation_sent" }` only once that email has been accepted for delivery. Confirm ownership before activating the subscriber. Responses should not reveal whether an address is already subscribed. New-project campaigns must target confirmed subscribers and include a working unsubscribe link.
+
+The proposal endpoint accepts JSON `{name,email,title,idea,stage,language,sources,consent: true,locale,website: ""}`. Validate field lengths and types server-side, reject spam, rate-limit, and store submissions in a private review queue. Return HTTP 200/201/202 and `{ "status": "received" }` only after durable storage. Treat source URLs as text; do not fetch arbitrary submitted URLs. Do not publish proposals or enroll proposal authors in project updates automatically.
+
+Allow CORS only from the deployed site and explicit development origins. Never make subscriber lists or private proposals publicly readable. Endpoints should return a non-2xx error on failure. The client times out after 15 seconds, retains entered values after failure, and displays success only for the expected server status.
+
+Without an endpoint, subscriptions show an unavailable notice and a disabled submit button. Educators can prepare and download a proposal locally; it is explicitly not submitted. This fallback never claims that an email or proposal was received.
+
+## Activation checks
+
+Verify confirmation email, confirmation link, new-project delivery, unsubscribe, duplicate submissions, rate limits, rejected requests, and private proposal receipt against the chosen production service before opening subscriptions. Browser UI and TypeScript checks do not establish delivery.

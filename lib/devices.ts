@@ -8,7 +8,7 @@ export type DeviceId=AdvancedDeviceId|'controller'|'console'|'car'|'solar'|'bicy
 type Translation=Record<Lang,string>;
 const tr=(en:string,fr:string,pt:string,ar:string):Translation=>({en,fr,pt,ar});
 export type DevicePart={id:string;stage:Stage;name:Translation;simple:Translation;deep:string;engineering:string;made:string;story:string;refs:string[]};
-export type Device={id:DeviceId;name:Translation;description:Translation;category:'devices'|'energy'|'electronics';complex?:boolean;presentation?:'site'|'exploded';hasMotion?:boolean;parts:DevicePart[];question:string;options:string[];correct:number;answer:string};
+export type Device={id:DeviceId;name:Translation;description:Translation;category:'devices'|'energy'|'electronics';complex?:boolean;sourceNotice?:string;presentation?:'site'|'exploded';hasMotion?:boolean;parts:DevicePart[];question:string;options:string[];correct:number;answer:string};
 export const deviceSources=[...advancedSources,...engineeringSources,...makerSources,...circuitSources,
  {id:'gamepad',name:'Microsoft Learn',title:'Gamepad inputs and vibration',url:'https://learn.microsoft.com/en-us/windows/uwp/gaming/gamepad-and-vibration'},
  {id:'xbox',name:'Xbox engineering team',title:'The new generation Xbox controller',url:'https://news.xbox.com/en-us/2013/06/06/xbox-one-controller-feature/'},

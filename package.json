@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
-    "build": "node scripts/generate-brand.mjs && node scripts/generate-art.mjs && node scripts/generate-devices.mjs --audit && next build --webpack && node scripts/offline.mjs",
+    "build": "node scripts/generate-brand.mjs && node scripts/generate-art.mjs && node scripts/generate-devices.mjs --audit && node scripts/generate-breakdowns.mjs && next build --webpack && node scripts/offline.mjs",
     "typecheck": "tsc --noEmit",
     "start": "node scripts/serve.mjs",
     "check": "npm run typecheck && node scripts/check-engineering.cjs && node scripts/check-community.mjs"

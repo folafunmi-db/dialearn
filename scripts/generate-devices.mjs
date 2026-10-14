@@ -1,3 +1,4 @@
+import {halfLatheSvg} from './curved-shell.mjs';
 import {buildAdvanced} from './advanced-geometry.mjs';
 import {engineeringGeometry} from './engineering-geometry.mjs';
 import {writeFileSync,mkdirSync} from 'node:fs';
@@ -10,25 +11,36 @@ mkdirSync('public/art',{recursive:true});
 const view=Number(process.env.ANATOMY_VIEW||0);const viewSuffix=view?'-'+view:'';
 function machine(id,bounds,azimuth=38,elevation=28){
  const P=k.fitProjection(bounds,560,560,{pad:48,azimuth:azimuth+view*45,elevation});
- const inks=[];const groups=[],R=A.recorder(P,{ground:shape=>A.boundsOf(shape).min[2]<=.05});let group,scope=null,lastItem=null,activeMotion=null,enriched=false;
+ const inks=[];const groups=[],R=A.recorder(P,{ground:shape=>A.boundsOf(shape).min[2]<=.05});let group,scope=null,lastItem=null,activeMotion=null,activeExterior=null,activeMaterial=null,enriched=false;
  const begin=(id,move=[0,0,0])=>{group={id,move,lift:k.translateAlong(P,move),svg:'',shapes:[]};groups.push(group);};
  const append=svg=>{if(scope)svg=`<g data-component="${scope.id}" data-stage="${scope.stage}">${svg}</g>`;group.svg+=svg;if(lastItem)lastItem.svg+=svg;};
- const add=(paths,shape,tone='hi',lit=false)=>{const solid=R.solid({...shape,name:R.nameFor(group.id),owner:group.id,render:{tone,lit,component:scope?.id,stage:scope?.stage,motion:activeMotion}});const raw=k.solidSvg(paths,{tone,lit});let svg=scope?`<g data-component="${scope.id}" data-stage="${scope.stage}">${raw}</g>`:raw;if(activeMotion){const p=k.iso(activeMotion.pivot,P),u=G.frameAlong(activeMotion.pivot,activeMotion.axis),a=k.iso(G.add3(activeMotion.pivot,u.u),P),b=k.iso(G.add3(activeMotion.pivot,u.v),P);svg=`<g data-spin="${[a[0]-p[0],a[1]-p[1],b[0]-p[0],b[1]-p[1],p[0],p[1]].join(',')}" data-ratio="${activeMotion.ratio}">${svg}</g>`;}group.svg+=svg;group.shapes.push(solid);const b=A.boundsOf(solid);lastItem=R.put({name:solid.name,piece:group.id,at:b.min.map((v,i)=>(v+b.max[i])/2),svg,shapes:[solid],move:group.move});};
+ const add=(paths,shape,tone='hi',lit=false)=>{const solid=R.solid({...shape,name:R.nameFor(group.id),owner:activeExterior?scope?.id||group.id:group.id,render:{materialKey:activeMaterial,inspectionOffset:activeExterior,tone,lit,component:scope?.id,stage:scope?.stage,motion:activeMotion}});let raw=paths.svg||k.solidSvg(paths,{tone,lit});if(activeMaterial)raw=`<g data-material="${activeMaterial}">${raw}</g>`;let svg=scope?`<g data-component="${scope.id}" data-stage="${scope.stage}">${raw}</g>`:raw;if(activeMotion){const p=k.iso(activeMotion.pivot,P),u=G.frameAlong(activeMotion.pivot,activeMotion.axis),a=k.iso(G.add3(activeMotion.pivot,u.u),P),b=k.iso(G.add3(activeMotion.pivot,u.v),P);svg=`<g data-spin="${[a[0]-p[0],a[1]-p[1],b[0]-p[0],b[1]-p[1],p[0],p[1]].join(',')}" data-ratio="${activeMotion.ratio}">${svg}</g>`;}group.svg+=svg;group.shapes.push(solid);const b=A.boundsOf(solid);lastItem=R.put({name:solid.name,piece:group.id,at:b.min.map((v,i)=>(v+b.max[i])/2),svg,shapes:[solid],move:group.move});};
  const plate=(poly,z,h,tone='hi')=>add(k.extrude(poly,z,h,P,{convex:false}),A.extruded(poly,z,h),tone);
  const slab=(x,y,w,d,z,h=3,tone='hi',r=2)=>add(k.slabOf({x,y,w,d,r},z,h,P,6,.5),A.slab({x,y,w,d,r},z,h,{},6),tone);
  const round=(F,s0,s1,r,tone='hi',inner=0)=>add(inner?G.ringBand(s0,s1,inner,r,F,P,{fill:'facets'}):G.disc(s0,s1,r,F,P),inner?A.ring(F,s0,s1,inner,r):A.disc(F,s0,s1,r),tone);
  const post=(x,y,z,h,r,tone='hi')=>round(G.frameAlong([x,y,z],[0,0,1]),0,h,r,tone);
+ const lathe=(F,poly,tone='hi')=>add(G.lathe(poly,F,P,{steps:48,rims:'all',smooth:{rows:3}}),A.body(F,poly),tone);
+ const latheHalf=(F,poly,start=0,tone='hi')=>{
+  const reach=Math.max(...poly.flat().map(Math.abs))*8+100;const cut=A.orientedBox(G.add3(F.o,G.mul3(F.v,start===0?-reach:reach)),[F.a,F.u,F.v],[reach,reach,reach]);
+  add(halfLatheSvg(F,poly,P,start),A.body(F,poly,{cut} ),tone);
+  R.solids.at(-1).render.phiStart=start;R.solids.at(-1).render.phiLength=Math.PI;
+ };
  const collarWall=(F,poly,s0,s1)=>add(G.prismOf(F,poly,s0,s1,P),A.prism(F,poly,s0,s1),'mid');
  const beam=(a,b,w=4,tone='mid')=>{const F=G.frameAlong(a,G.unit3(G.sub3(b,a))),len=G.len3(G.sub3(b,a)),poly=[[-w/2,-w/2],[w/2,-w/2],[w/2,w/2],[-w/2,w/2]];add(G.prismOf(F,poly,0,len,P),A.prism(F,poly,0,len),tone);};
  const ring=(F,s,r,tone='mid')=>{inks.push({kind:'circle',F,s,r,tone,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});const point=G.pointOf(F,s,r,0);const candidates=R.items.filter(i=>i.piece===group.id);const target=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,point))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,point)))))[0];const previous=lastItem;lastItem=target||lastItem;append(k.lineSvg(G.circleOf(F,s,r,P),{tone}));lastItem=previous;};
  const screw=(x,y,z,tone='lo',size=.8)=>{const previous=lastItem;const candidates=R.items.filter(i=>i.piece===group.id);lastItem=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z]))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z])))))[0]||lastItem;inks.push({kind:'dot',point:[x,y,z],tone,size,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});append(k.dotsSvg([k.iso([x,y,z],P)],{size,tone}));lastItem=previous;};
  const motion=(spec,fn)=>{const before=activeMotion;activeMotion=spec;fn();activeMotion=before;};
+ const material=(name,fn)=>{const before=activeMaterial;activeMaterial=name;fn();activeMaterial=before;};
+ const exterior=(offset,fn)=>{const before=activeExterior;activeExterior=offset;fn();activeExterior=before;};
  const detail=(id,stage,fn)=>{scope={id,stage};fn();scope=null;};
+ const line=(points,tone='mid')=>{inks.push({kind:'line',points,tone,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move,inspectionOffset:activeExterior});append(k.lineSvg(points.map(p=>k.iso(p,P)),{tone}));};
  const text=(x,y,z,value,size=7)=>{inks.push({kind:'text',point:[x,y,z],text:value,size,part:group.id,move:group.move});append(k.faceTextSvg(k.topMatrix([x,y],z,P),value,{size,tone:'mid',anchor:'middle'}));};
+ const cloneGeometry=(offset,test)=>{const originals=R.solids.filter(test).slice();for(const source of originals){const shape=A.moved(source,offset);begin(source.render.component||source.owner,source.move||[0,0,0]);detail(source.render.component||source.owner,source.render.stage||'foundations',()=>material(source.render.materialKey||null,()=>exterior(source.render.inspectionOffset||null,()=>{const paths=shape.kind==='prism'?G.prismOf(shape.F,shape.poly,shape.s0,shape.s1,P):G.lathe(shape.poly,shape.F,P,{steps:48,rims:'all',smooth:{rows:3}});add(paths,shape,source.render.tone,source.render.lit);})));}};
  const finish=()=>{
   if(process.env.ANATOMY_DEVICE&&process.env.ANATOMY_DEVICE!==id)return;
+  if(process.env.ANATOMY_DEVICES&&!process.env.ANATOMY_DEVICES.split(',').includes(id))return;
   if(!enriched){enriched=true;engineeringGeometry(id,{begin,detail,slab,post,round,beam,screw,ring,motion});}
-  if(!view)writeFileSync(`public/art/${id}-model.json`,JSON.stringify({azimuth,elevation,bounds,inks,parts:R.solids.map(s=>({kind:s.kind,F:s.F,poly:s.poly,s0:s.s0,s1:s.s1,move:s.move,part:s.owner,name:s.name,...s.render}))}));
+  if(!view)writeFileSync(`public/art/${id}-model.json`,JSON.stringify({azimuth,elevation,bounds,inks,parts:R.solids.map(s=>({kind:s.kind,F:s.F,poly:s.poly,s0:s.s0,s1:s.s1,cut:s.cut,move:s.move,part:s.owner,name:s.name,...s.render}))}));
   for(let pass=0;pass<6;pass++){
    const settled=A.settle(R,P,{states:[0,.5,1],step:process.argv.includes('--audit')?.5:(view?2:1)});const items=R.items;const parent=items.map((_,i)=>i);const find=i=>parent[i]===i?i:(parent[i]=find(parent[i]));let changed=false;
    for(const pair of [...settled.solved.cycles,...settled.solved.dropped.map(rule=>({a:rule.front,b:rule.back}))]){if(items[pair.a].piece===items[pair.b].piece){const a=find(pair.a),b=find(pair.b);if(a!==b){parent[b]=a;changed=true;}}}
@@ -36,13 +48,13 @@ function machine(id,bounds,azimuth=38,elevation=28){
    const clusters=new Map();items.forEach((item,i)=>{const root=find(i);if(!clusters.has(root))clusters.set(root,[]);clusters.get(root).push(item);});
    R.items=[...clusters.values()].map(list=>list.length===1?list[0]:({...list[0],name:list.map(i=>i.name).join('+'),svg:list.map(i=>i.svg).join(''),shapes:list.flatMap(i=>i.shapes),key:list.reduce((sum,i)=>sum+i.key,0)/list.length}));R.settled=null;
   }
-  const drawing=R.items.toSorted((a,b)=>a.key-b.key).map(item=>({id:item.piece,svg:item.svg,lift:k.translateAlong(P,item.move)}));
+  const drawing=R.items.toSorted((a,b)=>a.key-b.key).map(item=>({id:item.shapes[0]?.render?.inspectionOffset||item.piece.startsWith('hardware-')?item.shapes[0].render.component:item.piece,svg:item.svg,lift:k.translateAlong(P,item.move),inspectionOffset:item.shapes[0]?.render?.inspectionOffset}));
   A.auditOrExit(R,P,{frames:[0,.25,.5,.75,1],apart:true});
   writeFileSync(`public/art/${id}${viewSuffix}.json`,JSON.stringify(drawing));
-  if(!view)for(const opened of [false,true])writeFileSync(`public/art/${id}${opened?'-open':''}.svg`,k.figureSvg({width:560,height:560,label:`Illustrative ${id} anatomy`,body:drawing.map(g=>`<g ${opened?`transform="${g.lift}"`:''}>${g.svg}</g>`).join(''),standalone:'light'}).replace('<svg ', '<svg style="--anatomy-paper:#e3e6dc;--anatomy-top:#c8d3bc;--anatomy-shade-0:#6c816c;--anatomy-shade-1:#869780;--anatomy-shade-2:#a1b098;--anatomy-shade-3:#b9c5ad;--anatomy-hi:#405842;--anatomy-mid:#6b7e66;--anatomy-lo:#95a48b;--anatomy-faint:#aab6a0" '));
+  if(!view)for(const opened of [false,true])writeFileSync(`public/art/${id}${opened?'-open':''}.svg`,k.figureSvg({width:560,height:560,label:`Illustrative ${id} anatomy`,body:'<style>[data-material=glass]{opacity:.42}[data-material=white-polymer]{--anatomy-top:#f5f5ef;--anatomy-shade-0:#a6aca5;--anatomy-shade-1:#bec4bc;--anatomy-shade-2:#d6dad2;--anatomy-shade-3:#e8ebe3}[data-material=acoustic-mesh]{--anatomy-top:#303936;--anatomy-shade-0:#101a17;--anatomy-shade-1:#1b2823;--anatomy-shade-2:#27362f;--anatomy-shade-3:#34433b}</style>'+drawing.map(g=>`<g ${opened?`transform="${g.lift}"`:''}>${g.svg}</g>`).join(''),standalone:'light'}).replace('<svg ', '<svg style="--anatomy-paper:#e3e6dc;--anatomy-top:#c8d3bc;--anatomy-shade-0:#6c816c;--anatomy-shade-1:#869780;--anatomy-shade-2:#a1b098;--anatomy-shade-3:#b9c5ad;--anatomy-hi:#405842;--anatomy-mid:#6b7e66;--anatomy-lo:#95a48b;--anatomy-faint:#aab6a0" '));
   console.log(`${id}: ${groups.length} assemblies, ${R.solids.length} supported solids`);
  };
- return {P,begin,plate,collarWall,slab,round,post,beam,ring,screw,detail,motion,text,finish};
+ return {P,begin,plate,lathe,latheHalf,collarWall,slab,round,post,beam,ring,screw,detail,motion,exterior,material,cloneGeometry,text,line,finish};
 }
 {
  const m=machine('controller',k.boxCorners({x:-100,y:-50,w:200,d:140},0,125));const {begin,slab,post,detail,screw,text}=m;
