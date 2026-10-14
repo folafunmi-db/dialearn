@@ -1,6 +1,6 @@
 # Dialearn
 
-A Next.js App Router learning website for ages **12–18**. Explore twelve objects, trace inventions and contributors, and try guided Arduino and Raspberry Pi projects.
+A Next.js App Router learning website for **young learners, from beginner to advanced**. Explore 61 devices, machines, infrastructure systems and DIY projects, trace inventions and contributors, and try guided Arduino and Raspberry Pi builds.
 
 ## Run
 
@@ -32,7 +32,7 @@ pnpm start
 
 ## Content and geometry
 
-`lib/content.ts` contains the phone lessons; `lib/devices.ts` adds controller, handheld console, electric car, solar lamp, bicycle, drone, Arduino rover and Raspberry Pi station lessons, named contributors and primary references. Each new device has five assemblies and four deeper components. Advanced new-device explanations, quizzes and history currently remain English and are labelled as such in other languages. `scripts/generate-art.mjs` and `scripts/generate-devices.mjs` use the Anatomy isometric kit to generate precomputed geometry; the initial diagrams use precomputed SVG; the optional rotation renderer loads on demand. The SVG is an explanatory model, not a scale drawing or device repair guide. Many electronic parts, wiring, interconnects and manufacturing steps are omitted. The diagram opens along one axis to reveal assemblies; it does not reproduce a particular manufacturer's disassembly procedure.
+`lib/content.ts` contains the phone lessons; `lib/devices.ts` adds controller, handheld console, electric car, solar lamp, bicycle, drone, Arduino rover and Raspberry Pi station lessons, named contributors and primary references. Assembly counts vary by project and are derived from the catalogue. Advanced new-device explanations, quizzes and history currently remain English and are labelled as such in other languages. `scripts/generate-art.mjs` and `scripts/generate-devices.mjs` use the Anatomy isometric kit to generate precomputed geometry; the initial diagrams use precomputed SVG; the optional rotation renderer loads on demand. The SVG is an explanatory model, not a scale drawing or device repair guide. Many electronic parts, wiring, interconnects and manufacturing steps are omitted. The breakdown floats assemblies away from their assembled locations and animates them back into place; it does not reproduce a particular manufacturer's disassembly procedure.
 
 The bicycle experiment computes front-chainring teeth divided by rear-sprocket teeth; it is an ideal single-speed model.
 
@@ -48,7 +48,7 @@ Anatomy code in `vendor/anatomy/` retains its MIT license. Artwork is built in c
 
 Reusable controls are the official **shadcn/ui Base UI** components (Nova preset), installed in `components/ui/`. `components.json` records `base-nova`, RTL support and aliases. Tailwind v4 supports their styling; the site keeps its custom field-notebook theme and self-hosted font. No Radix primitives are used.
 
-Optional learning stages suggest ages 12–14, 15–16 and 17–18. They change the phone diagram’s selectable detail (5, 8 or 11 entries) and the other devices (5, 7 or 9 entries), default explanation depth and the battery model. Any learner can choose any stage; no exact age or birthdate is requested. The chosen stage is a browser-local preference, not an age verification or assessment. Memory, touch sensing and CMOS sensing appear at Systems; pixel regions, transistor-circuit marks and a conceptual separator cutaway become selectable at Engineering. These markers are educational illustrations, not microscopic scale drawings.
+Learners choose **Beginner, Intermediate or Advanced**. These difficulty levels change selectable detail, default explanation depth and teaching experiments. Any learner can choose any level and switch whenever they want. The chosen level is a browser-local preference, not an assessment or a fixed ability profile. Internal stage keys remain `foundations`, `systems` and `engineering` for saved preferences and links. Technical illustrations are explanatory models, not microscopic scale drawings.
 
 ## Mobile workshops
 
@@ -56,11 +56,11 @@ At phone widths the dedicated workshop has a sticky site header and part selecto
 
 Run `node scripts/generate-devices.mjs --audit` for recorded-solid support, clearance and painter-order checks. `ANATOMY_DEVICE=car` (or another device ID) scopes an audit. Drawings remain teaching simplifications, not scale models or manufacturer disassembly instructions.
 
-## Orientation and global age range
+## Orientation and difficulty settings
 
-Age range in Learning settings applies across the website. Each initial taster modal also has a visit-only age selector: its choice is passed through `?stage=` to the dedicated `/explore/[device]/` page, without writing the general preference. The object page can return to the general setting. The 3D modal has its own temporary age selector too.
+The difficulty level in Learning settings applies across the website. Each initial taster modal also has a visit-only difficulty selector: its choice is passed through `?stage=` to the dedicated `/explore/[device]/` page without writing the general preference. The 3D modal has its own temporary difficulty selector too.
 
-Library cards navigate directly to dedicated object pages. Start exploring opens a short taster modal with an “Explore this object” link. Each dedicated page has an object selector for switching between all twelve devices and projects. All twelve objects have dedicated pages for anatomy, explanations, manufacturing, contributors, sources and challenges. The normal diagram remains SVG. The 3D view uses neutral sage housings, graphite power modules, forest green circuit boards and softly lit standard materials. Canvas sizing follows layout dimensions to avoid stretching during modal animations. “Explore in 3D” opens a full-screen Three.js workspace with a floating selected-part lesson and continuous yaw and tilt dragging, roll and zoom sliders, on-canvas zoom buttons, wheel and two-finger pinch zoom, keyboard arrows, part picking and reset. The renderer loads only on opening, renders at up to 2× resolution with a 1.5-million-pixel budget and stops drawing when idle, hidden or offscreen. Reduced motion removes the easing tail. WebGL-unavailable devices retain the normal diagram and all lessons.
+Library cards navigate directly to dedicated object pages. Start exploring opens a short taster modal with an “Explore this object” link. Each dedicated page has an object selector for searching among the available devices and projects. All objects have dedicated pages for anatomy, explanations, manufacturing, contributors, sources and challenges. The normal diagram remains SVG. The 3D view uses neutral sage housings, graphite power modules, forest green circuit boards and softly lit standard materials. Canvas sizing follows layout dimensions to avoid stretching during modal animations. “Explore in 3D” opens a full-screen Three.js workspace with a floating selected-part lesson and continuous yaw and tilt dragging, roll and zoom sliders, on-canvas zoom buttons, wheel and two-finger pinch zoom, keyboard arrows, part picking and reset. The renderer loads only on opening, renders at up to 2× resolution with a 1.5-million-pixel budget and stops drawing when idle, hidden or offscreen. Reduced motion removes the easing tail. WebGL-unavailable devices retain the normal diagram and all lessons.
 
 Hover descriptions anchor to the selected solid or SVG element. They use `pointer-events: none` throughout, so clicks and drags reach the object. Popups and page transitions use restrained motion with reduced-motion overrides.
 
@@ -72,13 +72,13 @@ The source is intended for the private `folafunmi-db/dialearn` repository. `verc
 
 ## DIY lab and identity
 
-The landing page separates seven device explorations from five DIY anatomy projects, with a dedicated `/diy/` page. The DIY cards open local anatomy pages for an Arduino rover, Raspberry Pi station, Arduino breadboard LED, reaction timer and plant waterer. There is no separate external “More build ideas” grid. LED and reaction projects include downloadable educational starters; watering is a planning lesson linked to GadhaGod’s original hardware guide. Original guide links and author credits live with the project lessons. External sources need internet. Desktop navigation and mobile section links reach the DIY lab from every object page.
+The landing page groups discoveries by type and separates them from five DIY anatomy projects, with a dedicated `/diy/` page. The DIY cards open local anatomy pages for an Arduino rover, Raspberry Pi station, Arduino breadboard LED, reaction timer and plant waterer. There is no separate external “More build ideas” grid. LED and reaction projects include downloadable educational starters; watering is a planning lesson linked to GadhaGod’s original hardware guide. Original guide links and author credits live with the project lessons. External sources need internet. Desktop navigation and mobile section links reach the DIY lab from every object page.
 
 The logo is an open book over two stacked learning layers. Matching SVG, ICO and Apple touch icons are in `app/`; the mark stays clear at small sizes. The 3D palette uses consistent forest/sage accents and neutral graphite materials with high-resolution canvas rendering.
 
 The brand mark uses offset book spines and an open book with a discovery spark. `scripts/generate-brand.mjs` rasterizes the SVG icon into the 16/32/48px ICO and 180px Apple touch icon during builds.
 
-Object switching lives in the exploration heading as a compact “Change object” control, alongside the explanation-depth buttons. It lists all available objects and keeps the selected option indicated in the menu.
+Object switching lives in the exploration heading as a compact “Change object” control, alongside the explanation-depth buttons. It opens a searchable modal with project cards.
 
 Light and dark modes are available from the header (or mobile navigation) and Learning settings. The saved theme loads before rendering; new visits use the system theme. Dark mode uses neutral charcoal surfaces with green highlights; green highlights remain visible in both modes.
 
