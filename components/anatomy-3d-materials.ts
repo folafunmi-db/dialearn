@@ -14,7 +14,7 @@ const presets={
  pcb:{color:0x45664e,metalness:0,roughness:.52},
 };
 export function createMachineMaterial(part:string,component:string|undefined,name:string,base:number,materialKey?:string){
- if(materialKey==='white-polymer'){const m=new THREE.MeshPhysicalMaterial({color:0xf3f2ed,metalness:0,roughness:.25,clearcoat:1,clearcoatRoughness:.18,side:THREE.DoubleSide});m.userData.base=m.color.getHex();return m;}
+ if(materialKey==='white-polymer'){const m=new THREE.MeshPhysicalMaterial({color:0xd5d8d2,metalness:0,roughness:.42,clearcoat:.28,clearcoatRoughness:.35,envMapIntensity:.45,side:THREE.DoubleSide});m.userData.base=m.color.getHex();return m;}
  if(materialKey==='acoustic-mesh'){const m=new THREE.MeshPhysicalMaterial({color:0x171b1a,metalness:.15,roughness:.75,side:THREE.DoubleSide});m.userData.base=m.color.getHex();return m;}
  if(materialKey==='indicator'){const m=new THREE.MeshPhysicalMaterial({color:0x8dbf77,emissive:0x3a6c26,emissiveIntensity:.2});m.userData.base=m.color.getHex();return m;}
  if(materialKey==='glass'){const glass=new THREE.MeshPhysicalMaterial({color:0xd9e4da,metalness:0,roughness:.08,transmission:.82,thickness:.3,ior:1.5,clearcoat:1,side:THREE.DoubleSide});glass.userData.base=glass.color.getHex();return glass;}

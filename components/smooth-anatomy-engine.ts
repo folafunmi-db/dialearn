@@ -18,9 +18,10 @@ export function createSmoothEngine(host:HTMLElement,model:AnatomyModel,onAngle:(
  const canvas=renderer.domElement;canvas.className='anatomy-canvas';canvas.setAttribute('aria-hidden','true');host.appendChild(canvas);
  const scene=new THREE.Scene(),root=new THREE.Group();root.scale.x=-1;scene.add(root); // Match the Anatomy projection's handedness.
  const camera=new THREE.OrthographicCamera(-200,200,200,-200,.1,3000);camera.up.set(0,0,1);scene.add(camera);
- const keyLight=new THREE.DirectionalLight(0xffffff,3.2);keyLight.position.set(-180,220,350);camera.add(keyLight);
- const fillLight=new THREE.DirectionalLight(0xf3f5ee,1.1);fillLight.position.set(220,-80,120);camera.add(fillLight);
- scene.add(new THREE.HemisphereLight(0xffffff,0x51535a,.8));
+ const paleHousing=model.parts.some(p=>p.materialKey==='white-polymer');
+ const keyLight=new THREE.DirectionalLight(0xffffff,paleHousing?1.9:3.2);keyLight.position.set(-180,220,350);camera.add(keyLight);
+ const fillLight=new THREE.DirectionalLight(0xf3f5ee,paleHousing?.45:1.1);fillLight.position.set(220,-80,120);camera.add(fillLight);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x51535a,paleHousing?.4:.8));
  const environment=createStudioEnvironment(renderer);scene.environment=environment.texture;
  const objects:{group:THREE.Group;object:THREE.Object3D;move:Vec;data:Solid|Ink;material?:THREE.MeshStandardMaterial;outline?:THREE.LineBasicMaterial;base:number}[]=[],pickables:THREE.Object3D[]=[],resources:{dispose:()=>void}[]=[];
  const vector=(a:Vec)=>new THREE.Vector3(...a);
