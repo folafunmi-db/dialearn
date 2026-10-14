@@ -477,3 +477,4 @@ html.still-mode .dialog[data-open],html.still-mode .dialog[data-closed],html.sti
 .device-stage .mechanism-play{width:44px;height:44px;min-height:44px;padding:0;flex:none;font-size:19px}
 .diy-build-copy .diy-kit-summary{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;line-height:1.7;font-size:12px}
 .diy-kit-summary strong{color:var(--ink);font-weight:550}
+.workshop-model > .source-notice{margin-top:16px}
