@@ -90,4 +90,4 @@ The 3D canvas fills the workspace beneath its header. Rotation, zoom and part se
 
 ## Project publishers and subscriptions
 
-Current projects are published by the **Dialearn team**, with separate credit to the original inventors and source authors. Learners can choose updates from all projects, a particular educator, or a project category (including DIY). Educators can propose subsequent projects for review and publisher credit. These subscription/proposal flows are prototypes: no email is sent or subscription saved without the receiving endpoints described in `docs/community-setup.md`.
+Current projects are published by the **Dialearn team**, with separate credit to the original inventors and source authors. Learners can choose updates from all projects, a particular educator, or one or more project categories (including DIY). Educators can propose subsequent projects for review and publisher credit. These subscription/proposal flows are prototypes: no email is sent or subscription saved without the receiving endpoints described in `docs/community-setup.md`.
