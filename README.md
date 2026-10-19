@@ -48,7 +48,7 @@ Anatomy code in `vendor/anatomy/` retains its MIT license. Artwork is built in c
 
 Reusable controls are the official **shadcn/ui Base UI** components (Nova preset), installed in `components/ui/`. `components.json` records `base-nova`, RTL support and aliases. Tailwind v4 supports their styling; the site keeps its custom field-notebook theme and self-hosted font. No Radix primitives are used.
 
-Learners choose **Beginner, Intermediate or Advanced**. These difficulty levels change selectable detail, default explanation depth and teaching experiments. Any learner can choose any level and switch whenever they want. The chosen level is a browser-local preference, not an assessment or a fixed ability profile. Internal stage keys remain `foundations`, `systems` and `engineering` for saved preferences and links. Technical illustrations are explanatory models, not microscopic scale drawings.
+Learners choose **Beginner, Intermediate or Advanced**. These difficulty levels change the explanation itself as well as selectable detail and teaching experiments. Beginner descriptions use everyday language; Intermediate introduces mechanisms and explains new terms; Advanced keeps the technical content, adds manufacturing context and defines unfamiliar vocabulary for young learners. The same copy selection is used in project lessons, hover descriptions, local 3D views, read-aloud, the text-only reader and interactive explainers. The expanded catalogue has 588 individually authored beginner part descriptions. All content selection happens on the device, without a learner profile or an AI request. Any learner can choose any level and switch whenever they want. The chosen level is a browser-local preference, not an assessment or a fixed ability profile. Internal stage keys remain `foundations`, `systems` and `engineering` for saved preferences and links. Technical illustrations are explanatory models, not microscopic scale drawings.
 
 ## Mobile workshops
 
@@ -91,3 +91,15 @@ The 3D canvas fills the workspace beneath its header. Rotation, zoom and part se
 ## Project publishers and subscriptions
 
 Current projects are published by the **Dialearn team**, with separate credit to the original inventors and source authors. Learners can choose updates from all projects, a particular educator, or one or more project categories (including DIY). Educators can propose subsequent projects for review and publisher credit. These subscription/proposal flows are prototypes: no email is sent or subscription saved without the receiving endpoints described in `docs/community-setup.md`.
+
+## Physics explainers
+
+`/explainers/` opens a separate ten-experiment gallery: projectile launcher, inclined plane with friction, pendulum clock experiment, gyroscope, vibrating string, pulley lifting rig, beam bending, car differential, drone balance and control, and camera focus and aperture. Each has its own static route, a lazily loaded Three.js apparatus, selectable component explanations, keyboard-accessible inputs, scenarios, run/pause/replay/reset, live SI measurements, and an equations/source sheet. The pendulum is the regulating pendulum only, not a complete clock movement.
+
+One deterministic model drives the geometry and readouts. Physical input changes restart a paused setup; inspection and force-arrow visibility leave physics unchanged. Rotor spin alone is visually slowed 20× in the gyroscope; the whole string experiment plays at 1/30 physical speed. Beam deflection is magnified 8×. Those scales and all model assumptions are visible in the exhibit. Text-only settings and WebGL failure preserve the numerical experiment and component descriptions. Lesson text is initially English; navigation remains multilingual.
+
+Run `node scripts/check-explainers.cjs` for scenario/limit checks, deterministic replay, energy and work checks, fixed-end nodes, and beam scaling/symmetry. `docs/explainers-design.md` records the models, source links, and scope. These are educational models rather than validated engineering simulations.
+
+Explainers also include a constrained car differential, a one-axis drone feedback test rig and thin-lens focus/aperture experiment. Select an adjustable part, then drag it horizontally or use its linked slider. The seekable timeline pauses playback and supports touch and keyboard scrubbing; Play resumes at that point.
+
+Explainers use a four-chapter guided story: Notice → Follow → Try → Connect. Everyday prompts introduce the puzzle, selectable causal chains highlight related components, contrasting setups support predictions, and calculated reference/current results make the relationship explicit. Controls remain available in a disclosure; optional component close-ups respect reduced-motion settings.
