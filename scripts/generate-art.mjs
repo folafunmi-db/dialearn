@@ -1,9 +1,10 @@
 import {writeFileSync, mkdirSync} from 'node:fs';
 import * as k from '../vendor/anatomy/iso-kit.mjs';
+const cardOnly=process.argv.includes('--card');
 const view=Number(process.env.ANATOMY_VIEW||0);
 const modelParts=[],modelInks=[];let currentPart='frame';
 const plan={x:-52,y:-100,w:104,d:200,r:12};
-const P=k.fitProjection([...k.boxCorners(plan,0,168)],560,560,{pad:35,azimuth:36+view*45,elevation:26});
+const P=k.fitProjection([...k.boxCorners(plan,0,cardOnly?42:168)],560,560,{pad:cardOnly?65:35,azimuth:36+view*45,elevation:26});
 const slab=(p,z,h,tone='hi',className='')=>{let component,stage;if(currentPart==='chip'&&p.x===20&&p.y===-75){component='memory';stage='systems';}if(className==='sensor-body'){component='sensor';stage='systems';}if(className==='pixel-region'){component='pixels';stage='engineering';}if(className==='logic-region'){component='transistors';stage='engineering';}if(className==='separator-region'){component='separator';stage='engineering';}if(className.startsWith('engineering-')){component=className.slice(12);stage='engineering';}modelParts.push({kind:'prism',F:{o:[0,0,0],a:[0,0,1],u:[1,0,0],v:[0,1,0]},poly:k.roundedPlan(p,8),s0:z,s1:z+h,tone,part:currentPart,component,stage,name:currentPart+'-'+modelParts.length,className});const svg=k.solidSvg(k.slabOf(p,z,h,P,8,0.7),{tone,className});return className.startsWith('engineering-')?`<g data-component="${component}" data-stage="engineering">${svg}</g>`:svg;};
 const line=(d,tone='faint')=>k.lineSvg(d,{tone});
 const dots=(p,size=0.7)=>k.dotsSvg(p.map(v=>k.iso(v,P)),{size,tone:'hi'});
@@ -44,15 +45,16 @@ display+=`<g data-component="pixels" data-stage="engineering">${slab({x:-32,y:0,
 currentPart='chip';chip+=`<g data-component="transistors" data-stage="engineering">${[-10,-4,2,8].map(x=>slab({x,y:-64,w:3,d:14,r:.4},11.1,.1,'hi','logic-region')).join('')}</g>`;
 currentPart='battery';battery+=`<g data-component="separator" data-stage="engineering">${slab({x:-37,y:58,w:74,d:17,r:1},11.1,.1,'hi','separator-region')}${[61,65,69,73].map(y=>line(k.lineOnTop([-37,y],[37,y],11.2,P),'mid')).join('')}</g>`;
 const shapes={frame,battery,chip,camera,display};
-const lifts={frame:0,battery:35,chip:70,camera:100,display:142};
+const lifts=cardOnly?{frame:0,battery:0,chip:0,camera:0,display:14}:{frame:0,battery:35,chip:70,camera:100,display:142};
 const groups=Object.entries(shapes).map(([id,svg])=>({id,svg,lift:k.translateAlong(P,[0,0,lifts[id]])}));
 mkdirSync('lib',{recursive:true});
-if(!view)writeFileSync('lib/art.ts','// Generated from the Anatomy isometric kit; run scripts/generate-art.mjs.\nexport const phoneGroups = '+JSON.stringify(groups)+' as const;\n');
+if(!view&&!cardOnly)writeFileSync('lib/art.ts','// Generated from the Anatomy isometric kit; run scripts/generate-art.mjs.\nexport const phoneGroups = '+JSON.stringify(groups)+' as const;\n');
 const body=groups.map(g=>`<g transform="${g.lift}" class="assembly ${g.id}">${g.svg}</g>`).join('');
 mkdirSync('public/art',{recursive:true});
-if(!view)writeFileSync('public/art/phone.svg',k.figureSvg({width:560,height:560,label:'An illustrative smartphone separated into five assemblies: frame, battery, circuit board, camera, display.',body,standalone:'light'}));
+if(!view&&!cardOnly)writeFileSync('public/art/phone.svg',k.figureSvg({width:560,height:560,label:'An illustrative smartphone separated into five assemblies: frame, battery, circuit board, camera, display.',body,standalone:'light'}));
 console.log('Generated phone anatomy: five assemblies, 50+ supported details; illustrative layout, not a repair guide.');
 
-writeFileSync(`public/art/phone${view?'-'+view:''}.json`,JSON.stringify(groups));
+if(!cardOnly)writeFileSync(`public/art/phone${view?'-'+view:''}.json`,JSON.stringify(groups));
+if(cardOnly)writeFileSync('public/art/phone-card.svg',k.figureSvg({width:560,height:560,label:'Isometric smartphone with its screen slightly raised above the detailed frame.',body,standalone:'light'}).replace('<svg ', '<svg style="--anatomy-paper:#e3e6dc;--anatomy-top:#c8d3bc;--anatomy-shade-0:#6c816c;--anatomy-shade-1:#869780;--anatomy-shade-2:#a1b098;--anatomy-shade-3:#b9c5ad;--anatomy-hi:#405842;--anatomy-mid:#6b7e66;--anatomy-lo:#95a48b;--anatomy-faint:#aab6a0" '));
 
-if(!view)writeFileSync('public/art/phone-model.json',JSON.stringify({azimuth:36,elevation:26,bounds:k.boxCorners(plan,0,168),parts:modelParts.map(s=>({...s,move:[0,0,lifts[s.part]]})),inks:[{kind:'text',point:[0,-40,22.1],text:'10:08',size:18,part:'display',move:[0,0,lifts.display]},{kind:'text',point:[0,42,11.1],text:'Li-ion',size:9,part:'battery',move:[0,0,lifts.battery]}]}));
+if(!view&&!cardOnly)writeFileSync('public/art/phone-model.json',JSON.stringify({azimuth:36,elevation:26,bounds:k.boxCorners(plan,0,168),parts:modelParts.map(s=>({...s,move:[0,0,lifts[s.part]]})),inks:[{kind:'text',point:[0,-40,22.1],text:'10:08',size:18,part:'display',move:[0,0,lifts.display]},{kind:'text',point:[0,42,11.1],text:'Li-ion',size:9,part:'battery',move:[0,0,lifts.battery]}]}));
