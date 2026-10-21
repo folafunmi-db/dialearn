@@ -1,7 +1,7 @@
 import type {Lang} from './content';
 // Each discovery belongs to one browsing group; DIY builds have their own section.
 export const discoveryTypes=[
- {id:'everyday',names:{en:'Everyday tech',fr:'Tech du quotidien',pt:'Tecnologia do dia a dia',ar:'تقنيات يومية'},objects:['phone','wrist-watch','smart-watch','wireless-earbuds','dslr-camera','electric-toothbrush','headphones']},
+ {id:'everyday',names:{en:'Everyday tech',fr:'Tech du quotidien',pt:'Tecnologia do dia a dia',ar:'تقنيات يومية'},objects:['phone','wrist-watch','smart-watch','galaxy-watch6-classic','wireless-earbuds','dslr-camera','electric-toothbrush','headphones']},
  {id:'home',names:{en:'Home appliances',fr:'Électroménager',pt:'Eletrodomésticos',ar:'أجهزة منزلية'},objects:['refrigerator','inverter-ac','microwave','robot-vacuum','washing-machine','induction-cooktop','coffee-barista']},
  {id:'computing',names:{en:'Computing & gaming',fr:'Informatique et jeux',pt:'Computação e jogos',ar:'الحوسبة والألعاب'},objects:['microprocessor','controller','console','home-console','optical-mouse','laser-printer']},
  {id:'transport',names:{en:'Vehicles & flight',fr:'Véhicules et vol',pt:'Veículos e voo',ar:'المركبات والطيران'},objects:['car','bicycle','drone','car-engine','turbofan','spacecraft-aocs','nuclear-submarine','drone-swarm','autonomous-driving','high-speed-rail','raptor-1','raptor-2','raptor-3','raptor-vacuum']},

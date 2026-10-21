@@ -1,3 +1,5 @@
+import {materialFor,materialCss} from './catalogue-materials.mjs';
+import {buildDiy,diyMaterialCss,diyMaterialFor} from './diy-hardware.mjs';
 import {halfLatheSvg} from './curved-shell.mjs';
 import {buildAdvanced} from './advanced-geometry.mjs';
 import {engineeringGeometry} from './engineering-geometry.mjs';
@@ -14,7 +16,7 @@ function machine(id,bounds,azimuth=38,elevation=28){
  const inks=[];const groups=[],R=A.recorder(P,{ground:shape=>A.boundsOf(shape).min[2]<=.05});let group,scope=null,lastItem=null,activeMotion=null,activeExterior=null,activeMaterial=null,enriched=false;
  const begin=(id,move=[0,0,0])=>{group={id,move,lift:k.translateAlong(P,move),svg:'',shapes:[]};groups.push(group);};
  const append=svg=>{if(scope)svg=`<g data-component="${scope.id}" data-stage="${scope.stage}">${svg}</g>`;group.svg+=svg;if(lastItem)lastItem.svg+=svg;};
- const add=(paths,shape,tone='hi',lit=false)=>{const solid=R.solid({...shape,name:R.nameFor(group.id),owner:activeExterior?scope?.id||group.id:group.id,render:{materialKey:activeMaterial,inspectionOffset:activeExterior,tone,lit,component:scope?.id,stage:scope?.stage,motion:activeMotion}});let raw=paths.svg||k.solidSvg(paths,{tone,lit});if(activeMaterial)raw=`<g data-material="${activeMaterial}">${raw}</g>`;let svg=scope?`<g data-component="${scope.id}" data-stage="${scope.stage}">${raw}</g>`:raw;if(activeMotion){const p=k.iso(activeMotion.pivot,P),u=G.frameAlong(activeMotion.pivot,activeMotion.axis),a=k.iso(G.add3(activeMotion.pivot,u.u),P),b=k.iso(G.add3(activeMotion.pivot,u.v),P);svg=`<g data-spin="${[a[0]-p[0],a[1]-p[1],b[0]-p[0],b[1]-p[1],p[0],p[1]].join(',')}" data-ratio="${activeMotion.ratio}">${svg}</g>`;}group.svg+=svg;group.shapes.push(solid);const b=A.boundsOf(solid);lastItem=R.put({name:solid.name,piece:group.id,at:b.min.map((v,i)=>(v+b.max[i])/2),svg,shapes:[solid],move:group.move});};
+ const add=(paths,shape,tone='hi',lit=false)=>{const resolvedMaterial=materialFor(id,group.id,scope?.id,activeMaterial);const solid=R.solid({...shape,name:R.nameFor(group.id),owner:activeExterior?scope?.id||group.id:group.id,render:{materialKey:resolvedMaterial,inspectionOffset:activeExterior,tone,lit,component:scope?.id,stage:scope?.stage,motion:activeMotion}});let raw=paths.svg||k.solidSvg(paths,{tone,lit});if(resolvedMaterial)raw=`<g data-material="${resolvedMaterial}">${raw}</g>`;let svg=scope?`<g data-component="${scope.id}" data-stage="${scope.stage}">${raw}</g>`:raw;if(activeMotion){const p=k.iso(activeMotion.pivot,P),u=G.frameAlong(activeMotion.pivot,activeMotion.axis),a=k.iso(G.add3(activeMotion.pivot,u.u),P),b=k.iso(G.add3(activeMotion.pivot,u.v),P);svg=`<g data-spin="${[a[0]-p[0],a[1]-p[1],b[0]-p[0],b[1]-p[1],p[0],p[1]].join(',')}" data-ratio="${activeMotion.ratio}">${svg}</g>`;}group.svg+=svg;group.shapes.push(solid);const b=A.boundsOf(solid);lastItem=R.put({name:solid.name,piece:group.id,at:b.min.map((v,i)=>(v+b.max[i])/2),svg,shapes:[solid],move:group.move});};
  const plate=(poly,z,h,tone='hi')=>add(k.extrude(poly,z,h,P,{convex:false}),A.extruded(poly,z,h),tone);
  const slab=(x,y,w,d,z,h=3,tone='hi',r=2)=>add(k.slabOf({x,y,w,d,r},z,h,P,6,.5),A.slab({x,y,w,d,r},z,h,{},6),tone);
  const round=(F,s0,s1,r,tone='hi',inner=0)=>add(inner?G.ringBand(s0,s1,inner,r,F,P,{fill:'facets'}):G.disc(s0,s1,r,F,P),inner?A.ring(F,s0,s1,inner,r):A.disc(F,s0,s1,r),tone);
@@ -30,7 +32,7 @@ function machine(id,bounds,azimuth=38,elevation=28){
  const ring=(F,s,r,tone='mid')=>{inks.push({kind:'circle',F,s,r,tone,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});const point=G.pointOf(F,s,r,0);const candidates=R.items.filter(i=>i.piece===group.id);const target=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,point))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,point)))))[0];const previous=lastItem;lastItem=target||lastItem;append(k.lineSvg(G.circleOf(F,s,r,P),{tone}));lastItem=previous;};
  const screw=(x,y,z,tone='lo',size=.8)=>{const previous=lastItem;const candidates=R.items.filter(i=>i.piece===group.id);lastItem=candidates.toSorted((a,b)=>Math.min(...a.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z]))))-Math.min(...b.shapes.map(shape=>Math.abs(A.sdf(shape,[x,y,z])))))[0]||lastItem;inks.push({kind:'dot',point:[x,y,z],tone,size,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move});append(k.dotsSvg([k.iso([x,y,z],P)],{size,tone}));lastItem=previous;};
  const motion=(spec,fn)=>{const before=activeMotion;activeMotion=spec;fn();activeMotion=before;};
- const material=(name,fn)=>{const before=activeMaterial;activeMaterial=name;fn();activeMaterial=before;};
+ const material=(name,fn)=>{const before=activeMaterial;activeMaterial=diyMaterialFor(name,id,group?.id,scope?.id);fn();activeMaterial=before;};
  const exterior=(offset,fn)=>{const before=activeExterior;activeExterior=offset;fn();activeExterior=before;};
  const detail=(id,stage,fn)=>{scope={id,stage};fn();scope=null;};
  const line=(points,tone='mid')=>{inks.push({kind:'line',points,tone,part:group.id,component:scope?.id,stage:scope?.stage,move:group.move,inspectionOffset:activeExterior});append(k.lineSvg(points.map(p=>k.iso(p,P)),{tone}));};
@@ -42,16 +44,19 @@ function machine(id,bounds,azimuth=38,elevation=28){
   if(!enriched){enriched=true;engineeringGeometry(id,{begin,detail,slab,post,round,beam,screw,ring,motion});}
   if(!view)writeFileSync(`public/art/${id}-model.json`,JSON.stringify({azimuth,elevation,bounds,inks,parts:R.solids.map(s=>({kind:s.kind,F:s.F,poly:s.poly,s0:s.s0,s1:s.s1,cut:s.cut,move:s.move,part:s.owner,name:s.name,...s.render}))}));
   for(let pass=0;pass<6;pass++){
-   const settled=A.settle(R,P,{states:[0,.5,1],step:process.argv.includes('--audit')?.5:(view?2:1)});const items=R.items;const parent=items.map((_,i)=>i);const find=i=>parent[i]===i?i:(parent[i]=find(parent[i]));let changed=false;
+   const settled=A.settle(R,P,{states:[0,.5,1],step:process.argv.includes('--preview')?2:process.argv.includes('--audit')?.5:(view?2:1)});const items=R.items;const parent=items.map((_,i)=>i);const find=i=>parent[i]===i?i:(parent[i]=find(parent[i]));let changed=false;
    for(const pair of [...settled.solved.cycles,...settled.solved.dropped.map(rule=>({a:rule.front,b:rule.back}))]){if(items[pair.a].piece===items[pair.b].piece){const a=find(pair.a),b=find(pair.b);if(a!==b){parent[b]=a;changed=true;}}}
    if(!changed)break;
    const clusters=new Map();items.forEach((item,i)=>{const root=find(i);if(!clusters.has(root))clusters.set(root,[]);clusters.get(root).push(item);});
    R.items=[...clusters.values()].map(list=>list.length===1?list[0]:({...list[0],name:list.map(i=>i.name).join('+'),svg:list.map(i=>i.svg).join(''),shapes:list.flatMap(i=>i.shapes),key:list.reduce((sum,i)=>sum+i.key,0)/list.length}));R.settled=null;
   }
   const drawing=R.items.toSorted((a,b)=>a.key-b.key).map(item=>({id:item.shapes[0]?.render?.inspectionOffset||item.piece.startsWith('hardware-')?item.shapes[0].render.component:item.piece,svg:item.svg,lift:k.translateAlong(P,item.move),inspectionOffset:item.shapes[0]?.render?.inspectionOffset}));
+  const diy=['arduino-rover','pi-station','breadboard-led','reaction-timer','plant-waterer','smart-watch','galaxy-watch6-classic'].includes(id);
+  const fitFrame=amount=>{const points=R.solids.flatMap(s=>{const b=A.boundsOf(s),offset=s.move||[0,0,0];return k.boxCorners({x:b.min[0],y:b.min[1],w:b.max[0]-b.min[0],d:b.max[1]-b.min[1]},b.min[2],b.max[2]).map(p=>k.iso(p.map((v,i)=>v+offset[i]*amount),P));});const lo=[0,1].map(i=>Math.min(...points.map(p=>p[i]))-24),hi=[0,1].map(i=>Math.max(...points.map(p=>p[i]))+24);return [lo[0],lo[1],hi[0]-lo[0],hi[1]-lo[1]].map(v=>Number(v.toFixed(3)));};
+  if(diy){drawing[0].assembledFrame=fitFrame(0);drawing[0].explodedFrame=fitFrame(1);}
   A.auditOrExit(R,P,{frames:[0,.25,.5,.75,1],apart:true});
   writeFileSync(`public/art/${id}${viewSuffix}.json`,JSON.stringify(drawing));
-  if(!view)for(const opened of [false,true])writeFileSync(`public/art/${id}${opened?'-open':''}.svg`,k.figureSvg({width:560,height:560,label:`Illustrative ${id} anatomy`,body:'<style>[data-material=glass]{opacity:.42}[data-material=white-polymer]{--anatomy-top:#f5f5ef;--anatomy-shade-0:#a6aca5;--anatomy-shade-1:#bec4bc;--anatomy-shade-2:#d6dad2;--anatomy-shade-3:#e8ebe3}[data-material=acoustic-mesh]{--anatomy-top:#303936;--anatomy-shade-0:#101a17;--anatomy-shade-1:#1b2823;--anatomy-shade-2:#27362f;--anatomy-shade-3:#34433b}</style>'+drawing.map(g=>`<g ${opened?`transform="${g.lift}"`:''}>${g.svg}</g>`).join(''),standalone:'light'}).replace('<svg ', '<svg style="--anatomy-paper:#e3e6dc;--anatomy-top:#c8d3bc;--anatomy-shade-0:#6c816c;--anatomy-shade-1:#869780;--anatomy-shade-2:#a1b098;--anatomy-shade-3:#b9c5ad;--anatomy-hi:#405842;--anatomy-mid:#6b7e66;--anatomy-lo:#95a48b;--anatomy-faint:#aab6a0" '));
+  if(!view)for(const opened of [false,true])writeFileSync(`public/art/${id}${opened?'-open':''}.svg`,k.figureSvg({width:560,height:560,label:`Illustrative ${id} anatomy`,body:'<style>'+materialCss+diyMaterialCss+'[data-material=glass]{opacity:.42}[data-material=white-polymer]{--anatomy-top:#f5f5ef;--anatomy-shade-0:#a6aca5;--anatomy-shade-1:#bec4bc;--anatomy-shade-2:#d6dad2;--anatomy-shade-3:#e8ebe3}[data-material=acoustic-mesh]{--anatomy-top:#303936;--anatomy-shade-0:#101a17;--anatomy-shade-1:#1b2823;--anatomy-shade-2:#27362f;--anatomy-shade-3:#34433b}</style>'+drawing.map(g=>`<g ${opened?`transform="${g.lift}"`:''}>${g.svg}</g>`).join(''),standalone:'light'}).replace('viewBox="0 0 560 560"',diy?`viewBox="${drawing[0][opened?'explodedFrame':'assembledFrame'].join(' ')}"`:'viewBox="0 0 560 560"').replace('<svg ', '<svg style="--anatomy-paper:#e3e6dc;--anatomy-top:#c8d3bc;--anatomy-shade-0:#6c816c;--anatomy-shade-1:#869780;--anatomy-shade-2:#a1b098;--anatomy-shade-3:#b9c5ad;--anatomy-hi:#405842;--anatomy-mid:#6b7e66;--anatomy-lo:#95a48b;--anatomy-faint:#aab6a0" '));
   console.log(`${id}: ${groups.length} assemblies, ${R.solids.length} supported solids`);
  };
  return {P,begin,plate,lathe,latheHalf,collarWall,slab,round,post,beam,ring,screw,detail,motion,exterior,material,cloneGeometry,text,line,finish};
@@ -108,48 +113,6 @@ function machine(id,bounds,azimuth=38,elevation=28){
  begin('motors',[0,0,78]);for(const x of [-78,78])for(const y of [-78,78]){post(x,y,12,2,8,'mid');post(x,y,14,16,1.5,'hi');const shell=[];for(let i=0;i<=16;i++){const a=i*Math.PI/16;shell.push([x+Math.cos(a)*8,y+Math.sin(a)*8]);}for(let i=16;i>=0;i--){const a=i*Math.PI/16;shell.push([x+Math.cos(a)*7,y+Math.sin(a)*7]);}m.plate(shell,14,13,'mid');m.motion({pivot:[x,y,21],axis:[0,0,1],ratio:x*y>0?1:-1},()=>m.round(G.frameAlong([x,y,27],[0,0,1]),0,1,8,'mid',6));post(x,y,28,2,3,'hi');slab(x-9,y-20,18,8,12,2,'mid');detail('esc','systems',()=>slab(x-6,y-19,12,6,14,2,'hi'));m.ring(G.frameAlong([x,y,28],[0,0,1]),0,6);}
  begin('rotors',[0,0,117]);for(const x of [-78,78])for(const y of [-78,78]){m.motion({pivot:[x,y,30],axis:[0,0,1],ratio:x*y>0?1:-1},()=>m.plate([[x-32,y-4],[x-4,y-3],[x+30,y-6],[x+32,y],[x+4,y+3],[x-30,y+6]],30,1.5,'hi'));detail('hub','engineering',()=>post(x,y,31.5,1.5,3,'mid'));}m.finish();
 }
-{
- const m=machine('arduino-rover',k.boxCorners({x:-70,y:-72,w:140,d:144},0,133),38,25);const {begin,slab,post,round,detail,screw,text}=m;
- begin('chassis');for(const x of [-61,61])for(const y of [-37]){const F=G.frameAlong([x,y,14],[1,0,0]);round(F,-5,5,14,'lo');m.ring(F,x<0?-5:5,10);}post(0,55,0,6,6,'lo');slab(-8,47,16,16,6,6,'mid');slab(-45,-66,90,132,12,4,'mid',8);for(const x of [-35,35])for(const y of [-57,57])screw(x,y,16);for(const x of [-23,23])for(const y of [-53,-20])post(x,y,16,5,2,'mid');for(const x of [-17,17])for(const y of [-5,10])post(x,y,16,5,2,'mid');
- begin('power',[0,0,24]);slab(-28,24,56,27,16,4,'mid');for(let i=0;i<4;i++)slab(-25+i*13,27,10,21,20,5,'hi',3);slab(-8,52,16,6,16,4,'lo',1);
- begin('board',[0,0,48]);slab(-28,-58,56,44,21,2,'mid',2);slab(-17,-45,30,9,23,3,'hi');for(let i=0;i<12;i++)slab(-23+i*4,-55,2,3,23,3,'lo',.4);slab(-27,-29,10,10,23,6,'hi');slab(17,-27,8,8,23,5,'lo');detail('gpio','engineering',()=>{for(let i=0;i<8;i++)slab(-12+i*4,-19,2,3,23,3,'lo',.4);});detail('pwm','systems',()=>slab(16,-46,8,9,23,2,'hi'));text(0,-29,23.1,'UNO',6);
- begin('driver',[0,0,72]);slab(-22,-10,44,25,21,2,'mid',2);slab(-8,-5,16,10,23,3,'hi');detail('bridge','systems',()=>slab(-7,-4,14,8,26,.3,'hi'));for(const x of [-18,15])for(let y=0;y<4;y++)slab(x,-6+y*5,3,3,23,3,'lo',.3);
- begin('motors',[0,0,100]);for(const x of [-1,1])for(const y of [-37]){slab(x<0?-56:45,y-10,11,20,12,10,'mid',2);detail('gearbox','engineering',()=>slab(x<0?-56:51,y-9,5,18,22,2,'hi',1));slab(x<0?-45:41,y-8,4,16,16,4,'mid');}m.finish();
-}
-{
- const m=machine('pi-station',k.boxCorners({x:-65,y:-54,w:130,d:108},0,132),38,27);const {begin,slab,post,detail,screw,text}=m;
- begin('case');slab(-60,-50,120,100,0,4,'mid',7);for(const x of [-60,56])slab(x,-46,4,92,4,28,'mid');slab(-56,-50,112,4,4,28,'mid');for(let i=0;i<9;i++)slab(-56+i*13,46,8,4,4,28,'mid');for(const x of [-36,36])for(const y of [-32,4])post(x,y,4,6,2,'mid');for(const x of [17,40])for(const y of [25,39])post(x,y,4,16,2,'mid');for(const x of [-38,-18])for(const y of [24,37])post(x,y,4,6,2,'mid');
- begin('power',[0,0,21]);slab(-43,20,30,22,10,2,'mid');slab(-40,24,12,12,12,5,'lo');slab(-24,25,8,10,12,3,'hi');
- begin('computer',[0,0,43]);slab(-43,-39,86,50,10,2,'mid',3);detail('processor','engineering',()=>slab(-10,-28,20,19,12,3,'hi'));detail('header','engineering',()=>{slab(-39,-37,78,5,12,4,'lo',0);for(let i=0;i<20;i++){post(-36+i*3.7,-34.5,16,2,.45,'hi');}});for(const x of [-37,-21,-5,11,27])slab(x,-5,10,8,12,5,'mid');text(23,-21,12.1,'Pi',8);
- begin('sensor',[0,0,70]);slab(12,20,34,25,20,2,'mid',2);slab(25,25,9,8,22,2,'hi');detail('sensing','systems',()=>slab(26,26,7,6,24,.3,'hi'));detail('i2c','systems',()=>{for(let i=0;i<4;i++)post(17+i*7,41,22,3,1,'lo');});for(const x of [17,40])screw(x,25,22);
- begin('storage',[0,0,98]);slab(-31,-25,17,17,12,1,'lo',1);for(let i=0;i<5;i++)slab(-28+i*2.5,-24,1.5,4,13,.25,'mid',0);m.finish();
-}
-// Breadboard projects: real board supports and separated component bodies.
-// Jumpers show construction; pin numbers and electrical paths use the build table.
-for(const id of ['breadboard-led','reaction-timer','plant-waterer']){
- const water=id==='plant-waterer',timer=id==='reaction-timer';
- const m=machine(id,k.boxCorners({x:-100,y:-65,w:200,d:130},0,135),38,32);
- const {begin,slab,post,detail,text,screw,beam}=m;
- begin('breadboard');slab(-98,-60,196,120,0,4,'lo',7);
- for(const x of [-83,-37])for(const y of [-36,36])post(x,y,4,4,2,'mid');
- slab(0,-50,88,100,4,7,'hi',3);slab(41,-46,5,92,11,.2,'lo',0);
- for(let row=0;row<10;row++)for(const x of [9,16,23,30,37,50,57,64,71,78])screw(x,-40+row*9,11,'hi',1.35);
- detail('contacts','systems',()=>screw(9,-40,11,'hi',1.35));
- begin('controller',[0,0,30]);slab(-91,-43,62,86,8,2,'mid',3);
- detail('processor','engineering',()=>slab(-76,-14,18,31,10,4,'hi',1));
- detail('gpio','systems',()=>{for(const x of [-89,-35])for(let i=0;i<9;i++){slab(x,-34+i*8,4,6,10,4,'lo',.6);screw(x+2,-31+i*8,14);}});
- slab(-79,-42,19,14,10,9,'mid',2);slab(-52,-38,12,11,10,7,'lo',3);for(const x of [-70,-57])post(x,30,10,5,3,'mid');text(-60,22,10.1,'UNO',6);
- if(!water){
-  begin('resistor',[0,0,56]);for(const x of [37,50])post(x,5,11,5,.7,'lo');beam([37,5,16],[40,5,19],1,'lo');beam([47,5,19],[50,5,16],1,'lo');slab(40,2,7,6,19,3,'mid',2);for(const x of [41,43,45])slab(x,2,0.6,6,22,.15,'hi',0);
-  begin('led',[0,0,77]);for(const x of [37,50])post(x,-22,11,5,.7,'lo');beam([37,-22,16],[42,-22,19],1,'lo');beam([50,-22,16],[45,-22,19],1,'lo');post(43.5,-22,19,2,5,'mid');post(43.5,-22,21,9,4,'hi');detail('junction','engineering',()=>post(43.5,-22,30,1,2.8,'hi'));
-  if(timer){begin('button',[0,0,58]);for(const x of [37,50])for(const y of [14,32])post(x,y,11,4,.8,'lo');slab(34,11,19,24,15,4,'mid',2);detail('timing','engineering',()=>slab(39,17,9,12,19,.4,'lo',1));post(43.5,23,19.4,6,4,'hi');}
-  begin('wiring',[0,0,102]);for(const x of [-33,9])post(x,32,14,4,.7,'lo');beam([-33,32,18],[9,32,18],1.3,'mid');for(const x of [30,57])post(x,38,11,4,.7,'lo');beam([30,38,15],[57,38,15],1.3,'mid');
- }else{
-  begin('sensor',[0,0,62]);slab(67,-46,15,53,11,2,'mid',2);slab(65,-5,19,15,13,2,'mid',2);slab(70,-1,9,6,15,2,'hi',1);for(const x of [68,73,78])post(x,7,15,3,.8,'lo');detail('sensing','engineering',()=>slab(68,-45,13,39,13,.4,'hi',1));
-  begin('driver',[0,0,85]);for(const x of [16,53])for(const y of [8,35])post(x,y,11,4,1,'mid');slab(12,4,46,36,15,2,'mid',2);slab(22,10,25,22,17,15,'hi',2);for(let i=0;i<3;i++){slab(15+i*12,34,8,5,17,6,'mid',1);screw(19+i*12,36.5,23);}for(let i=0;i<3;i++)post(14+i*5,7,17,3,.7,'lo');
-  begin('pump',[0,0,108]);slab(69,18,22,29,11,4,'mid',3);post(80,31,15,17,9,'hi');slab(73,25,14,12,32,3,'mid',3);post(80,31,35,8,3,'hi');
- }
- m.finish();
-}
+buildDiy(machine);
 
 buildAdvanced(machine);

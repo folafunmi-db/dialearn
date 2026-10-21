@@ -1,6 +1,8 @@
 import * as G from '../vendor/anatomy/lathe.mjs';
 // Original component layouts for Dialearn, not borrowed collection figures.
 export function engineeringGeometry(id,m){
+ if(['arduino-rover','pi-station','breadboard-led','reaction-timer','plant-waterer'].includes(id))return; // Built with the shared detailed hardware.
+
  const {begin,detail,slab,post,round,beam,screw,ring}=m;
  const pkg=(parent,move,key,x,y,z,w=8,d=6)=>{begin(parent,move);detail(key,'engineering',()=>{slab(x,y,w,d,z,1.4,'hi',.7);for(let i=0;i<3;i++){slab(x+1+i*(w-2)/3,y-.7,1,.7,z,.5,'mid',.1);slab(x+1+i*(w-2)/3,y+d,1,.7,z,.5,'mid',.1);}});};
  const logic=(parent,move,key,x,y,z,w,d)=>{begin(parent,move);detail(key,'engineering',()=>slab(x,y,w,d,z,.12,'mid',.2));};

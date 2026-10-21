@@ -1,3 +1,4 @@
+import {materialFor,materialCss} from './catalogue-materials.mjs';
 import {writeFileSync, mkdirSync} from 'node:fs';
 import * as k from '../vendor/anatomy/iso-kit.mjs';
 const cardOnly=process.argv.includes('--card');
@@ -5,7 +6,7 @@ const view=Number(process.env.ANATOMY_VIEW||0);
 const modelParts=[],modelInks=[];let currentPart='frame';
 const plan={x:-52,y:-100,w:104,d:200,r:12};
 const P=k.fitProjection([...k.boxCorners(plan,0,cardOnly?42:168)],560,560,{pad:cardOnly?65:35,azimuth:36+view*45,elevation:26});
-const slab=(p,z,h,tone='hi',className='')=>{let component,stage;if(currentPart==='chip'&&p.x===20&&p.y===-75){component='memory';stage='systems';}if(className==='sensor-body'){component='sensor';stage='systems';}if(className==='pixel-region'){component='pixels';stage='engineering';}if(className==='logic-region'){component='transistors';stage='engineering';}if(className==='separator-region'){component='separator';stage='engineering';}if(className.startsWith('engineering-')){component=className.slice(12);stage='engineering';}modelParts.push({kind:'prism',F:{o:[0,0,0],a:[0,0,1],u:[1,0,0],v:[0,1,0]},poly:k.roundedPlan(p,8),s0:z,s1:z+h,tone,part:currentPart,component,stage,name:currentPart+'-'+modelParts.length,className});const svg=k.solidSvg(k.slabOf(p,z,h,P,8,0.7),{tone,className});return className.startsWith('engineering-')?`<g data-component="${component}" data-stage="engineering">${svg}</g>`:svg;};
+const slab=(p,z,h,tone='hi',className='')=>{let component,stage;if(currentPart==='chip'&&p.x===20&&p.y===-75){component='memory';stage='systems';}if(className==='sensor-body'){component='sensor';stage='systems';}if(className==='pixel-region'){component='pixels';stage='engineering';}if(className==='logic-region'){component='transistors';stage='engineering';}if(className==='separator-region'){component='separator';stage='engineering';}if(className.startsWith('engineering-')){component=className.slice(12);stage='engineering';}modelParts.push({kind:'prism',F:{o:[0,0,0],a:[0,0,1],u:[1,0,0],v:[0,1,0]},poly:k.roundedPlan(p,8),s0:z,s1:z+h,tone,materialKey:materialFor('phone',currentPart,component||className),part:currentPart,component,stage,name:currentPart+'-'+modelParts.length,className});const svg=`<g data-material="${materialFor('phone',currentPart,component||className)}">${k.solidSvg(k.slabOf(p,z,h,P,8,0.7),{tone,className})}</g>`;return className.startsWith('engineering-')?`<g data-component="${component}" data-stage="engineering">${svg}</g>`:svg;};
 const line=(d,tone='faint')=>k.lineSvg(d,{tone});
 const dots=(p,size=0.7)=>k.dotsSvg(p.map(v=>k.iso(v,P)),{size,tone:'hi'});
 let frame=slab(plan,0,5,'mid','housing')+slab(k.insetPlan(plan,3),5,1,'lo','housing');
@@ -49,7 +50,7 @@ const lifts=cardOnly?{frame:0,battery:0,chip:0,camera:0,display:14}:{frame:0,bat
 const groups=Object.entries(shapes).map(([id,svg])=>({id,svg,lift:k.translateAlong(P,[0,0,lifts[id]])}));
 mkdirSync('lib',{recursive:true});
 if(!view&&!cardOnly)writeFileSync('lib/art.ts','// Generated from the Anatomy isometric kit; run scripts/generate-art.mjs.\nexport const phoneGroups = '+JSON.stringify(groups)+' as const;\n');
-const body=groups.map(g=>`<g transform="${g.lift}" class="assembly ${g.id}">${g.svg}</g>`).join('');
+const body='<style>'+materialCss+'</style>'+groups.map(g=>`<g transform="${g.lift}" class="assembly ${g.id}">${g.svg}</g>`).join('');
 mkdirSync('public/art',{recursive:true});
 if(!view&&!cardOnly)writeFileSync('public/art/phone.svg',k.figureSvg({width:560,height:560,label:'An illustrative smartphone separated into five assemblies: frame, battery, circuit board, camera, display.',body,standalone:'light'}));
 console.log('Generated phone anatomy: five assemblies, 50+ supported details; illustrative layout, not a repair guide.');

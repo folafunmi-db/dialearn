@@ -1,3 +1,4 @@
+import hardwareMaterials from '@/lib/machine-materials.json';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -18,7 +19,8 @@ export function createExplainerEngine(host:HTMLElement,id:ExplainerId,initial:In
  const studio=createExhibitLighting(scene,renderer),surfaceMaps=createSurfaceMaps();
  const shadowCanvas=document.createElement('canvas');shadowCanvas.width=shadowCanvas.height=128;const ctx=shadowCanvas.getContext('2d')!;const gradient=ctx.createRadialGradient(64,64,6,64,64,64);gradient.addColorStop(0,'rgba(32,38,30,.22)');gradient.addColorStop(1,'rgba(32,38,30,0)');ctx.fillStyle=gradient;ctx.fillRect(0,0,128,128);const shadowTexture=new THREE.CanvasTexture(shadowCanvas),shadowGeometry=new THREE.PlaneGeometry(1,1),shadowMaterial=new THREE.MeshBasicMaterial({map:shadowTexture,transparent:true,depthWrite:false});const shadow=new THREE.Mesh(shadowGeometry,shadowMaterial);shadow.rotation.x=-Math.PI/2;shadow.position.y=-.23;scene.add(shadow);
  let textures:THREE.Texture[]=[],resources:(THREE.BufferGeometry|THREE.Material)[]=[],pickables:THREE.Object3D[]=[],materials=new Map<string,THREE.MeshPhysicalMaterial>(),selected='',p=initial,drawMechanism:(s:Snapshot)=>void=()=>{},updatePhysicalInputs:()=>void=()=>{},setAssembly:(mode:string,spread?:number)=>void=()=>{},sceneView=initialView,explodedAmount=initialView==='exploded'?1:0,assemblyFrame=0,latest=createExperiment(id,p).sample(0),disposed=false,fitDistance=8,viewInitialized=false;
- const colors={paint:0x31513f,metal:0xc3c8ca,brass:0xc59b50,rubber:0x20262a,paper:0xbbb8aa,rope:0x8d7650,white:0xe3e0d5};
+ const hex=(key:keyof typeof hardwareMaterials)=>new THREE.Color(hardwareMaterials[key].color).getHex();
+ const colors={paint:0x31513f,metal:hex('aluminium'),brass:hex('brass'),rubber:hex('rubber'),paper:hex('concrete'),rope:0x8d7650,white:hex('ceramic')};
  type Finish=keyof typeof colors;
  function material(part:string,finish:Finish){const key=part+finish;let m=materials.get(key);if(!m){const metallic=finish==='metal'||finish==='brass';m=new THREE.MeshPhysicalMaterial({color:colors[finish],metalness:metallic?.92:finish==='paper'?.32:0,roughness:finish==='rubber'?.7:metallic?.26:.42,clearcoat:finish==='paint'?.35:0,clearcoatRoughness:.3,roughnessMap:metallic?surfaceMaps.metal:surfaceMaps.grain,bumpMap:metallic?surfaceMaps.metal:surfaceMaps.grain,bumpScale:metallic?.002:.006,envMapIntensity:metallic?1.35:.7});m.userData.base=colors[finish];m.userData.part=part;materials.set(key,m);resources.push(m);}return m;}
  function mesh(part:string,g:THREE.BufferGeometry,finish:Finish,pos:V=[0,0,0],parent:THREE.Object3D=apparatus){resources.push(g);const m=new THREE.Mesh(g,material(part,finish));m.position.set(...pos);m.userData.part=part;m.castShadow=true;m.receiveShadow=true;parent.add(m);pickables.push(m);return m;}

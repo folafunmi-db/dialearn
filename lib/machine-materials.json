@@ -1,0 +1,182 @@
+{
+  "steel": {
+    "color": "#989ea5",
+    "metalness": 1,
+    "roughness": 0.3
+  },
+  "aluminium": {
+    "color": "#c4c9cf",
+    "metalness": 0.95,
+    "roughness": 0.38
+  },
+  "brass": {
+    "color": "#c6a45b",
+    "metalness": 0.9,
+    "roughness": 0.3
+  },
+  "copper": {
+    "color": "#b9744e",
+    "metalness": 0.95,
+    "roughness": 0.32
+  },
+  "titanium": {
+    "color": "#8d8983",
+    "metalness": 0.9,
+    "roughness": 0.38
+  },
+  "plastic": {
+    "color": "#30343a",
+    "metalness": 0,
+    "roughness": 0.56
+  },
+  "rubber": {
+    "color": "#202226",
+    "metalness": 0,
+    "roughness": 0.88
+  },
+  "ceramic": {
+    "color": "#d9d6cd",
+    "metalness": 0,
+    "roughness": 0.7
+  },
+  "pcb": {
+    "color": "#26774b",
+    "metalness": 0.05,
+    "roughness": 0.58
+  },
+  "chip": {
+    "color": "#25272b",
+    "metalness": 0.05,
+    "roughness": 0.62
+  },
+  "battery": {
+    "color": "#555a62",
+    "metalness": 0.45,
+    "roughness": 0.5
+  },
+  "screen": {
+    "color": "#15232c",
+    "metalness": 0.12,
+    "roughness": 0.25
+  },
+  "glass": {
+    "color": "#aec4cc",
+    "metalness": 0,
+    "roughness": 0.14
+  },
+  "white-polymer": {
+    "color": "#d9dcde",
+    "metalness": 0,
+    "roughness": 0.42
+  },
+  "acoustic-mesh": {
+    "color": "#171b1d",
+    "metalness": 0.15,
+    "roughness": 0.75
+  },
+  "indicator": {
+    "color": "#80b84d",
+    "metalness": 0,
+    "roughness": 0.4
+  },
+  "ruby": {
+    "color": "#aa3755",
+    "metalness": 0,
+    "roughness": 0.3
+  },
+  "lead": {
+    "color": "#666870",
+    "metalness": 0.8,
+    "roughness": 0.55
+  },
+  "graphite": {
+    "color": "#323b46",
+    "metalness": 0.65,
+    "roughness": 0.4
+  },
+  "bridge-paint": {
+    "color": "#bd4f32",
+    "metalness": 0.2,
+    "roughness": 0.62
+  },
+  "car-paint": {
+    "color": "#b8473d",
+    "metalness": 0.2,
+    "roughness": 0.3
+  },
+  "bike-paint": {
+    "color": "#24678b",
+    "metalness": 0.2,
+    "roughness": 0.42
+  },
+  "carbon": {
+    "color": "#292d31",
+    "metalness": 0.12,
+    "roughness": 0.5
+  },
+  "solar-cell": {
+    "color": "#263e68",
+    "metalness": 0.3,
+    "roughness": 0.32
+  },
+  "thermal-foil": {
+    "color": "#c7a652",
+    "metalness": 0.8,
+    "roughness": 0.34
+  },
+  "silicon": {
+    "color": "#605667",
+    "metalness": 0.65,
+    "roughness": 0.27
+  },
+  "enamel": {
+    "color": "#e1e3e1",
+    "metalness": 0.1,
+    "roughness": 0.4
+  },
+  "smoke": {
+    "color": "#6e7e83",
+    "metalness": 0,
+    "roughness": 0.3
+  },
+  "drum-green": {
+    "color": "#287865",
+    "metalness": 0.4,
+    "roughness": 0.3
+  },
+  "red-plastic": {
+    "color": "#b63a30",
+    "metalness": 0,
+    "roughness": 0.45
+  },
+  "safety-orange": {
+    "color": "#dc7529",
+    "metalness": 0.15,
+    "roughness": 0.5
+  },
+  "safety-yellow": {
+    "color": "#ddb836",
+    "metalness": 0.1,
+    "roughness": 0.5
+  },
+  "utility-paint": {
+    "color": "#788b85",
+    "metalness": 0.15,
+    "roughness": 0.6
+  },
+  "water": {
+    "color": "#468da2",
+    "metalness": 0,
+    "roughness": 0.27
+  },
+  "earth": {
+    "color": "#a38e72",
+    "metalness": 0,
+    "roughness": 0.96
+  },
+  "concrete": {
+    "color": "#b3afa5",
+    "metalness": 0,
+    "roughness": 0.92
+  }
+}

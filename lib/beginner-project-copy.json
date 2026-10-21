@@ -684,5 +684,18 @@
     "microphones": "Microphones pick up speech and outside sound for calls or noise control.",
     "controls": "Buttons or touch areas let you choose what the headphones do.",
     "charging": "A charging connection and protective electronics recharge the battery."
+  },
+  "galaxy-watch6-classic": {
+    "case": "The case protects a small computer. The strap holds it near your wrist.",
+    "display": "The screen shows information, and a separate sensing layer notices touch.",
+    "processor": "A small chip runs apps and coordinates sensors and wireless messages.",
+    "battery": "A small rechargeable battery powers the watch.",
+    "optical": "Small lights shine on the skin and a sensor measures how much light comes back.",
+    "imu": "Motion sensors notice changes in movement and turning.",
+    "radio": "A radio exchanges information with nearby devices or networks.",
+    "haptics": "A small moving weight makes vibrations you can feel.",
+    "charging": "A charging connection transfers energy into the battery through protective electronics.",
+    "controls": "Press these side buttons to choose an action on the watch.",
+    "bezel": "This ring turns around the screen. Turn it to move through choices."
   }
 }

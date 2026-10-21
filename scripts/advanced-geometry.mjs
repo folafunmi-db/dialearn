@@ -1,3 +1,4 @@
+import {buildWatch} from './watch-geometry.mjs';
 import {buildNewHardware} from './new-hardware.mjs';
 import {buildEarbuds} from './earbuds-geometry.mjs';
 import {completeEnclosure} from './complete-enclosures.mjs';
@@ -11,6 +12,7 @@ const catalogue=JSON.parse(readFileSync(new URL('../lib/advanced-catalogue.json'
 export function buildAdvanced(machine){for(const spec of catalogue.devices){
  if(process.env.ANATOMY_DEVICE&&process.env.ANATOMY_DEVICE!==spec.id)continue;
  if(process.env.ANATOMY_DEVICES&&!process.env.ANATOMY_DEVICES.split(',').includes(spec.id))continue;
+ if(buildWatch(spec,machine))continue;
  if(buildNewHardware(spec,machine))continue;
  if(buildEarbuds(spec,machine))continue;
  if(buildLandmark(spec,machine))continue;
@@ -162,9 +164,6 @@ export function buildAdvanced(machine){for(const spec of catalogue.devices){
   at('coil',()=>{post(-24,0,7,1,32,'mid');for(let i=0;i<9;i++)round(G.frameAlong([-24,0,8],[0,0,1]),0,1,7+i*3,'hi',6+i*3);});at('pan',()=>{post(-24,0,24,3,32,'hi');housing(G.frameAlong([-24,0,27],[0,0,1]),0,18,32,2);beam([8,0,36],[38,0,36],3,'mid');},[0,0,60]);at('glass',()=>slab(-78,-54,156,108,21,3,'hi',3),[0,0,30]);board('inverter',18,-28,32,27);at('ferrite',()=>{for(const x of [-45,-25,-5])slab(x,-20,2,40,4,3,'mid',.5);});at('fan',()=>post(48,21,4,7,2,'hi'));rotor('fan',48,21,12,15);board('sensors',-67,24,15,13);board('controller',14,40,43,9);box('filter',18,2,23,8,6);
  }else if(spec.id==='home-console'){
   base('chassis',190,125);at('chassis',()=>{slab(-83,47,166,4,4,30,'mid');for(const x of [-83,79])slab(x,-49,4,96,4,30,'mid');});at('processor',()=>{slab(-69,-36,105,63,4,2,'mid');slab(-42,-13,30,30,6,2,'hi');});at('processor',()=>slab(-42,-13,30,30,8,4,'hi',1));at('memory',()=>{for(const [x,y] of [[-58,-12],[-58,6],[3,-12],[3,6]])slab(x,y,11,12,6,2,'hi',.5);});box('storage',-67,32,44,11,4);at('cooling',()=>{slab(-43,-14,32,32,12,3,'mid');for(let i=0;i<10;i++)slab(-42+i*3,-13,1,30,15,14,'hi',0);},[0,0,40]);at('fan',()=>post(22,12,6,10,2,'mid'));rotor('fan',22,12,17,15);box('power',46,-35,28,55,22);at('io',()=>{for(const x of [-69,-39,-8,22])slab(x,-42,15,6,4,8,'hi',1);});board('radio',46,27,25,15);board('controller',-14,33,28,10);
- }else if(spec.id==='smart-watch'){
-  base('case',100,145);at('case',()=>{slab(-30,-35,60,70,4,4,'mid',10);for(const y of [-67,35])slab(-18,y,36,32,4,4,'lo',4);for(const x of [-26,26])for(const y of [-31,31])post(x,y,8,15,1.5,'mid');});
-  at('display',()=>{slab(-29,-34,58,68,23,3,'mid',8);slab(-25,-30,50,60,26,.3,'hi',5);},[0,0,55]);at('processor',()=>{for(const x of [-19,19])for(const y of [-18,11])post(x,y,8,7,1,'mid');slab(-20,-19,40,32,15,2,'mid',2);slab(-8,-15,16,13,17,2,'hi',.5);});box('battery',-22,15,43,14,7,8);at('optical',()=>{for(const [x,y] of [[-9,-22],[0,-22],[9,-22]])post(x,y,8,2,3,'hi');});board('imu',-18,2,8,8,17);board('radio',10,2,8,8,17);at('haptics',()=>m.motion({pivot:[0,23,16],axis:[1,0,0],ratio:2,mode:'oscillate',amplitude:.15},()=>slab(-10,18,20,10,15,3,'hi',1)));at('charging',()=>round(G.frameAlong([0,0,8],[0,0,1]),0,1,14,'mid',12));at('controls',()=>{slab(30,-3,5,6,4,10,'mid');round(G.frameAlong([35,0,10],[1,0,0]),0,3,4,'hi');});
  }else if(spec.id==='laser-printer'){
   base('frame',190,135);at('frame',()=>{slab(-82,-47,164,4,4,68,'mid');slab(-82,-43,4,85,4,68,'mid');for(const y of [-43,38])slab(78,y,4,4,4,68,'mid');slab(-71,-51,142,93,4,3,'hi');});
   for(const [id,y,z,r] of [['feed',-32,15,5],['drum',-4,32,12],['transfer',-4,16,4],['fuser',27,24,8]]){at(id,()=>{const X=id==='drum'?60:id==='transfer'?66:60;for(const x of [-X,X]){slab(x-1,id==='drum'?y+6:y-3,2,6,7,z-10,'mid');if(id==='drum')beam([x,y+6,z-3],[x,y,z-3],1,'mid');round(G.frameAlong([x,y,z],[1,0,0]),-1,1,3,'mid',2);}round(G.frameAlong([0,y,z],[1,0,0]),-X-1,-56,2,'hi');round(G.frameAlong([0,y,z],[1,0,0]),56,X+1,2,'hi');m.motion({pivot:[0,y,z],axis:[1,0,0],ratio:id==='transfer'?-1:1},()=>{round(G.frameAlong([0,y,z],[1,0,0]),-56,56,r,'hi',2);round(G.frameAlong([0,y,z+r-1],[1,0,0]),-54,54,.4,'mid');});});}

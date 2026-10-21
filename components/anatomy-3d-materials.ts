@@ -1,23 +1,18 @@
 import * as THREE from 'three';
+import diyMaterials from '@/lib/diy-materials.json';
+import machineMaterials from '@/lib/machine-materials.json';
 // Adapted from Airsup Anatomy 3D MAT and studioEnvironment (MIT).
 // Presets describe representative construction materials, not measured alloy
 // assignments for a specific product. Preserve green for PCBs and selection.
-const presets={
- steel:{color:0x989a9c,metalness:1,roughness:.3},
- aluminium:{color:0xd3d5d7,metalness:1,roughness:.38},
- brass:{color:0xc6ac68,metalness:1,roughness:.28},
- copper:{color:0xb98669,metalness:1,roughness:.3},
- titanium:{color:0x99928a,metalness:1,roughness:.32},
- plastic:{color:0x3b3d40,metalness:0,roughness:.56},
- rubber:{color:0x222427,metalness:0,roughness:.88},
- ceramic:{color:0xdedbd4,metalness:0,roughness:.7},
- pcb:{color:0x45664e,metalness:0,roughness:.52},
+const presets:Record<string,THREE.MeshPhysicalMaterialParameters>={
+ ...diyMaterials,
+ ...machineMaterials,
 };
 export function createMachineMaterial(part:string,component:string|undefined,name:string,base:number,materialKey?:string){
- if(materialKey==='white-polymer'){const m=new THREE.MeshPhysicalMaterial({color:0xd5d8d2,metalness:0,roughness:.42,clearcoat:.28,clearcoatRoughness:.35,envMapIntensity:.45,side:THREE.DoubleSide});m.userData.base=m.color.getHex();return m;}
+ if(materialKey==='white-polymer'){const m=new THREE.MeshPhysicalMaterial({color:machineMaterials['white-polymer'].color,metalness:0,roughness:.42,clearcoat:.28,clearcoatRoughness:.35,envMapIntensity:.45,side:THREE.DoubleSide});m.userData.base=m.color.getHex();return m;}
  if(materialKey==='acoustic-mesh'){const m=new THREE.MeshPhysicalMaterial({color:0x171b1a,metalness:.15,roughness:.75,side:THREE.DoubleSide});m.userData.base=m.color.getHex();return m;}
  if(materialKey==='indicator'){const m=new THREE.MeshPhysicalMaterial({color:0x8dbf77,emissive:0x3a6c26,emissiveIntensity:.2});m.userData.base=m.color.getHex();return m;}
- if(materialKey==='glass'){const glass=new THREE.MeshPhysicalMaterial({color:0xd9e4da,metalness:0,roughness:.08,transmission:.82,thickness:.3,ior:1.5,clearcoat:1,side:THREE.DoubleSide});glass.userData.base=glass.color.getHex();return glass;}
+ if(materialKey==='glass'){const glass=new THREE.MeshPhysicalMaterial({color:machineMaterials.glass.color,metalness:0,roughness:.08,transmission:.82,thickness:.3,ior:1.5,clearcoat:1,side:THREE.DoubleSide});glass.userData.base=glass.color.getHex();return glass;}
  const key=`${component||''} ${part} ${name}`.toLowerCase();
  let preset=presets.aluminium;
  if(/soil|rock|concrete|raft|foundation|masonry/.test(key))preset=presets.ceramic;
