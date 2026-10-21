@@ -200,4 +200,5 @@
 [data-material=diy-brown]{--anatomy-top:#816045;--anatomy-paper:#704a2c;--anatomy-shade-0:#3a2617;--anatomy-shade-1:#4a311d;--anatomy-shade-2:#5a3b23;--anatomy-shade-3:#684529;--anatomy-hi:#322114;--anatomy-mid:#cdc0b5;--anatomy-lo:#a68f7c}
 [data-material=diy-red]{--anatomy-top:#cd534d;--anatomy-paper:#c63c35;--anatomy-shade-0:#671f1c;--anatomy-shade-1:#832823;--anatomy-shade-2:#9e302a;--anatomy-shade-3:#b83831;--anatomy-hi:#591b18;--anatomy-mid:#ebbbb8;--anatomy-lo:#dc8682}
 [data-material=diy-wire]{--anatomy-top:#e3c048;--anatomy-paper:#dfb72f;--anatomy-shade-0:#745f18;--anatomy-shade-1:#93791f;--anatomy-shade-2:#b29226;--anatomy-shade-3:#cfaa2c;--anatomy-hi:#645215;--anatomy-mid:#f4e6b6;--anatomy-lo:#ebd27e}
-</style></svg>
+
+.iso .iso-line{stroke-opacity:.36;stroke-width:.45px}.iso .iso-edge{stroke-opacity:.5}</style></svg>

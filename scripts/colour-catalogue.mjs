@@ -2,7 +2,10 @@
 import {readFileSync,writeFileSync,readdirSync,existsSync} from 'node:fs';
 import {materialFor,materialCss} from './catalogue-materials.mjs';
 import {diyMaterialCss} from './diy-hardware.mjs';
-const css=materialCss+'\n'+diyMaterialCss;
+// Standalone images are used as small project previews. Keep their linework
+// quieter than the full-size interactive SVG diagrams, whose styles stay intact.
+const previewLines='.iso .iso-line{stroke-opacity:.36;stroke-width:.45px}.iso .iso-edge{stroke-opacity:.5}';
+const css=materialCss+'\n'+diyMaterialCss+'\n'+previewLines;
 const colourSvg=(svg,id,part)=>{
  // Remove only this script's own outer wrapper on repeated runs.
  if(svg.startsWith('<g data-catalogue-material='))svg=svg.slice(svg.indexOf('>')+1,-4);

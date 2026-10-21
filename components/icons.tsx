@@ -2,6 +2,7 @@ import type {CSSProperties} from 'react';
 export function Icon({name,size=20,style}:{name:string;size?:number;style?:CSSProperties}) {
 const paths:Record<string,React.ReactNode>={
  moon:<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>,
+ back:<path d="M19 12H5m6-6-6 6 6 6"/>,
  arrow:<><path d="M5 12h14m-6-6 6 6-6 6"/></>,
  down:<path d="m7 10 5 5 5-5"/>,
  globe:<><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></>,
