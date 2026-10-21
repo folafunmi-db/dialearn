@@ -24,12 +24,12 @@ const buttonVariants = cva(
         xs: "h-6 gap-1 rounded-[var(--radius-control)] px-2 text-xs in-data-[slot=button-group]:rounded-[var(--radius-control)] has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-7 gap-1 rounded-[var(--radius-control)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-[var(--radius-control)] has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2",
-        icon: "size-8",
+        icon: "size-8 aspect-square p-0",
         "icon-xs":
-          "size-6 rounded-[var(--radius-control)] in-data-[slot=button-group]:rounded-[var(--radius-control)] [&_svg:not([class*='size-'])]:size-3",
+          "size-6 aspect-square p-0 rounded-[var(--radius-control)] in-data-[slot=button-group]:rounded-[var(--radius-control)] [&_svg:not([class*='size-'])]:size-3",
         "icon-sm":
-          "size-7 rounded-[var(--radius-control)] in-data-[slot=button-group]:rounded-[var(--radius-control)]",
-        "icon-lg": "size-9",
+          "size-7 aspect-square p-0 rounded-[var(--radius-control)] in-data-[slot=button-group]:rounded-[var(--radius-control)]",
+        "icon-lg": "size-9 aspect-square p-0",
       },
     },
     defaultVariants: {
@@ -48,6 +48,7 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot="button"
+      data-icon-only={size?.startsWith("icon") || (typeof className === "string" && className.split(/\s+/).includes("icon-button")) ? "true" : undefined}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
