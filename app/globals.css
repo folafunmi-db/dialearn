@@ -765,3 +765,20 @@ button.quiet-link,.footer-links button{padding-inline:8px;background-clip:paddin
 .difficulty-meter>span:nth-child(2){height:10px}
 .difficulty-meter>span:nth-child(3){height:14px}
 .difficulty-meter>span[data-active="true"]{background:var(--green)}
+
+/* Keep the stacked discovery filters equally compact on small screens. */
+@media(max-width:720px){
+  .discovery-type-controls{--discovery-control-height:36px}
+  .mobile-discovery-type .ui-select-trigger,.discovery-type-controls .search{height:var(--discovery-control-height);min-height:var(--discovery-control-height);padding-block:0}
+  .discovery-type-controls .search input{height:100%;min-height:0;padding-block:0}
+}
+
+/* Quiet assurances: balanced on wide screens, readable icon-and-text rows on phones. */
+.principles{border:0;background:transparent;padding:0}
+.principles-inner{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding-block:16px;border-block:1px solid var(--line)}
+.principles-inner>span{display:flex;align-items:center;justify-content:center;gap:9px;font-size:12px;line-height:1.5}
+.principles-inner svg{width:17px;height:17px;flex:0 0 17px}
+@media(max-width:720px){
+  .principles-inner{grid-template-columns:1fr;gap:0;padding-block:10px}
+  .principles-inner>span{justify-content:flex-start;min-height:32px;font-size:12px}
+}

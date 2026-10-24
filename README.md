@@ -103,3 +103,5 @@ Run `node scripts/check-explainers.cjs` for scenario/limit checks, deterministic
 Explainers also include a constrained car differential, a one-axis drone feedback test rig and thin-lens focus/aperture experiment. Select an adjustable part, then drag it horizontally or use its linked slider. The seekable timeline pauses playback and supports touch and keyboard scrubbing; Play resumes at that point.
 
 Explainers use a four-chapter guided story: Notice → Follow → Try → Connect. Everyday prompts introduce the puzzle, selectable causal chains highlight related components, contrasting setups support predictions, and calculated reference/current results make the relationship explicit. Controls remain available in a disclosure; optional component close-ups respect reduced-motion settings.
+
+Social sharing uses the 1200 × 630 `app/opengraph-image.png`, with editable artwork in `design/social-card.svg`. Regenerate it with `node scripts/generate-social-image.mjs` (also included in builds). Share URLs use the Vercel production hostname automatically; set `NEXT_PUBLIC_SITE_URL` when deploying to another host or a custom domain.
